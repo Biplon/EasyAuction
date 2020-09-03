@@ -1,0 +1,2 @@
+# EasyAuction
+Spigot plugin
