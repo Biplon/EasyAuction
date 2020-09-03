@@ -1,0 +1,17 @@
+name: EasyAuction
+author: Vestri
+description: EasyAuction
+version: 0.1
+api-version: 1.15
+main: ep.java.EasyAuction
+permissions:
+  ea.admin:
+    description: admin
+    default: op
+  ea.player:
+    description: changename
+    default: op
+commands:
+  epgive:
+    description: give pet
+    usage: /epgive <playername> [petname]

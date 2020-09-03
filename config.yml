@@ -1,0 +1,50 @@
+general:
+  #language
+  lang: en_us
+  #auctiontime min in sec
+  auctiontimeMin: 30
+  #auctiontime max in sec
+  auctiontimeMax: 120
+  #time between 2 auctions for 1 player in min
+  timerauction: 10
+  #reduced time between 2 auctions. If player has this perm
+  reducedtimerauction:
+    1:
+      perm: "w.willi"
+      time: 5
+    2:
+      perm: "w.lulu"
+      time: 2
+  #fee in % if auction successful
+  fee: 5
+  #min bid steps in % from start price
+  bidsteps: 1
+  #time + if time lower 10 sec and anyone bid increase time in sec
+  timeplus: 10
+  #ban time in min
+  bantime: 1440
+  #blacklist items 1 lore text (case sensitive)
+  blacklist:
+    1:
+      lore: "Waffel"
+database:
+  mysql:
+    #Server address
+    host: 127.0.0.1
+    #Server port (default 3306)
+    port: 3306
+    #Database name (Need to exist)
+    databaseName: 'dbname'
+    #Tables name log (will auto create)
+    tableNameLog: 'ea_logs'
+    #Tables name player will see auctions (will auto create)
+    tableNameseeAuction: 'ea_player_see_auction'
+    #User name
+    user: 'admin'
+    #User password
+    password: 'waffle'
+    #SSL connection
+    sslEnabled: false
+
+
+
