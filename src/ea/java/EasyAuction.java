@@ -1,7 +1,10 @@
 package ea.java;
 
+import ea.java.Command.CommandAEAdmin;
+import ea.java.Command.CommandAEPLayer;
 import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
+import ea.java.Database.DatabaseManager;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,15 +26,15 @@ public class EasyAuction extends JavaPlugin
         instance = this;
         ConfigManager.loadConfig();
         LanguageManager.loadLang();
+        new DatabaseManager();
         regCommands();
         regEvents();
     }
 
     private void regCommands()
     {
-        //TODO implement commands
-        //Objects.requireNonNull(this.getCommand("epgive")).setExecutor(new GivePlayerPetCommand());
-
+        Objects.requireNonNull(this.getCommand("auction")).setExecutor(new CommandAEPLayer());
+        Objects.requireNonNull(this.getCommand("auctionadmin")).setExecutor(new CommandAEAdmin());
     }
 
     private void regEvents()

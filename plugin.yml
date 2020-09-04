@@ -12,6 +12,9 @@ permissions:
     description: changename
     default: op
 commands:
-  epgive:
-    description: give pet
-    usage: /epgive <playername> [petname]
+  auction:
+    description: auction
+    usage: /auction
+  auctionadmin:
+    description: auctionadmin
+    usage: /auctionadmin
