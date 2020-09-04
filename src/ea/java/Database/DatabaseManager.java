@@ -2,7 +2,9 @@ package ea.java.Database;
 
 import ea.java.EasyAuction;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.Date;
 import java.util.UUID;
@@ -95,11 +97,11 @@ public class DatabaseManager
                 {
 
                     data = "CREATE TABLE IF NOT EXISTS " + dbname + "." + ea_logs + " " +
-                            "(`id` INT NOT NULL," +
-                            "`uuid_player` CHAR(128) NOT NULL," +
+                            "(`id` INT NOT NULL  AUTO_INCREMENT," +
+                            "`player` CHAR(128) NOT NULL," +
                             "`start_time` DATETIME NULL," +
                             "`item` LONGTEXT NULL," +
-                            "`uuid_winner` CHAR(128) NULL," +
+                            "`winner` CHAR(128) NULL," +
                             "`price` INT NULL," +
                             " PRIMARY KEY (`id`)) ENGINE = InnoDB  DEFAULT CHARSET=utf8" +
                             " ROW_FORMAT = DYNAMIC;";
@@ -227,6 +229,38 @@ public class DatabaseManager
         }
     }
 
+    public void createLog(String player,String item,String winner,int price)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    Date dt = new Date();
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
+                    String date = sdf.format(dt);
+                    data = "Insert into " + dbname + "." + ea_logs + " (player,start_time,item,winner,price) values('" + player + "','"+ date +"','"+ item +"','"+ winner +"','"+ price +"'); ";
+                    query = connection.prepareStatement(data);
+                    query.addBatch();
+                    query.executeBatch();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error load player inventory! Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+    }
+
     public void disablePlayerSeeAuction(UUID id)
     {
         try
@@ -285,6 +319,78 @@ public class DatabaseManager
         {
             throwable.printStackTrace();
         }
+    }
+
+    public void banPlayer(UUID id,int time)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    Date dt = new Date();
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
+                    String date = sdf.format(dt);
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `start_time` = '"+ date +"', `time` = '"+ time +"' WHERE (`uuid_player` = '"+id+"');";
+
+                    query = connection.prepareStatement(data);
+
+                    query.execute();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+    }
+
+    public void pardonPlayer(UUID uniqueId)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    Date dt = new Date();
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
+                    String date = sdf.format(dt);
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `time` = '"+ 0 +"' WHERE (`uuid_player` = '"+uniqueId+"');";
+
+                    query = connection.prepareStatement(data);
+
+                    query.execute();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+    }
+
+    public boolean playerBanned(Player p)
+    {
+        //TODO implement
+        return false;
     }
 
     //TODO implement Insert Update Statements

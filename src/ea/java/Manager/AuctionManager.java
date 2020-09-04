@@ -1,6 +1,7 @@
 package ea.java.Manager;
 
 import ea.java.Config.LanguageManager;
+import ea.java.Database.DatabaseManager;
 import ea.java.EasyAuction;
 import ea.java.Struct.Auction;
 import org.bukkit.Bukkit;
@@ -21,6 +22,8 @@ public class AuctionManager
     private double remainingTimeLoop = 10;
 
     private double timeLeft;
+
+    public boolean enabled = true;
 
     public Auction getCurrentAuction()
     {
@@ -66,8 +69,15 @@ public class AuctionManager
             {
                 if (pl !=null &&  pl.isOnline())
                 {
-                    String itemtext = currentAuction.getAuctionItem().getAmount() +"x ";
-                    itemtext +=  currentAuction.getAuctionItem().getItemMeta().getDisplayName();
+                    String itemtext = item.getAmount() +"x ";
+                    if (!item.getItemMeta().getDisplayName().equals(""))
+                    {
+                        itemtext +=  item.getItemMeta().getDisplayName();
+                    }
+                    else
+                    {
+                        itemtext +=  item.getType();
+                    }
                     pl.sendMessage(LanguageManager.auctionRunText.replace("%item%",itemtext).replace("%price%",currentAuction.getPriceCurrent() +""));
                     pl.sendMessage(LanguageManager.auctionMinLeft.replace("%timeleft%", getTimeString(timeLeft)));
                 }
@@ -98,6 +108,7 @@ public class AuctionManager
                 }
                 map.clear();
             }
+           DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(),currentAuction.getAuctionItem().toString(),currentAuction.getBidPlayer().getDisplayName(),currentAuction.getPriceCurrent());
 //TODO remove money
         }
         else
@@ -112,7 +123,49 @@ public class AuctionManager
                 }
                 map.clear();
             }
+            DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(),currentAuction.getAuctionItem().toString(),"---",0);
         }
+    }
+
+    public void stopAuction(boolean playerOff,Player p)
+    {
+        Map<Integer, ItemStack> map = null;
+        if (playerOff)
+        {
+            map =   p.getInventory().addItem(currentAuction.getAuctionItem());
+            if (map.size() == 1)
+            {
+                for (final ItemStack item : map.values())
+                {
+                    p.getWorld().dropItemNaturally(p.getLocation(), item);
+                }
+                map.clear();
+            }
+            CommandExecuteManager.getInstance().banPlayer(p.getName(),EasyAuction.getInstance().getConfig().getInt("general.bantime"));
+        }
+        else
+        {
+            map =   currentAuction.getAuctionStartPlayer().getInventory().addItem(currentAuction.getAuctionItem());
+            if (map.size() == 1)
+            {
+                for (final ItemStack item : map.values())
+                {
+                    currentAuction.getAuctionStartPlayer().getWorld().dropItemNaturally(currentAuction.getAuctionStartPlayer().getLocation(), item);
+                }
+                map.clear();
+            }
+        }
+
+        DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(),currentAuction.getAuctionItem().toString(),"---",0);
+        Bukkit.getScheduler().cancelTask(timerTask);
+        for (Player pl :  PlayerSeeAuctionManager.getPlayerSeeAuction())
+        {
+            if (pl !=null &&  pl.isOnline())
+            {
+                pl.sendMessage(LanguageManager.auctionStop + " " + (playerOff ? LanguageManager.auctionStopPlayerOff : LanguageManager.auctionStopAdmin));
+            }
+        }
+
     }
 
 

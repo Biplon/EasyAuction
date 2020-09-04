@@ -56,6 +56,9 @@ public class LanguageManager
     public static String minText;
     public static String secText;
     public static String auctionEnd;
+    public static String auctionStop;
+    public static String auctionStopPlayerOff;
+    public static String auctionStopAdmin;
 
     public static void loadLang()
     {
@@ -107,6 +110,10 @@ public class LanguageManager
         minText = cfg.getString("mintext") != null ? cfg.getString("mintext") : "min";
         secText = cfg.getString("sectext") != null ? cfg.getString("sectext") : "sec";
         auctionEnd = cfg.getString("auctionEnd") != null ? cfg.getString("auctionEnd") : "Auction ends. Winner is: %winner%";
+
+        auctionStop = cfg.getString("auctionStop") != null ? cfg.getString("auctionStop") : "Auction stopped.";
+        auctionStopPlayerOff = cfg.getString("auctionStopPlayerOff") != null ? cfg.getString("auctionStopPlayerOff") : "Player offline";
+        auctionStopAdmin = cfg.getString("auctionStopAdmin") != null ? cfg.getString("auctionStopAdmin") : "by Admin";
         //TODO implement language
     }
 }

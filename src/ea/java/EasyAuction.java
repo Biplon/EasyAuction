@@ -7,6 +7,7 @@ import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
 import ea.java.Events.OnInventoryClick;
 import ea.java.Events.OnInventoryClose;
+import ea.java.Events.OnPlayerLeave;
 import ea.java.Events.OnPlayerLogin;
 import ea.java.Manager.AuctionManager;
 import ea.java.Manager.CommandExecuteManager;
@@ -61,6 +62,7 @@ public class EasyAuction extends JavaPlugin
         //TODO implement events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new OnPlayerLogin(), this);
+        pm.registerEvents(new OnPlayerLeave(), this);
         pm.registerEvents(new OnInventoryClick(), this);
         pm.registerEvents(new OnInventoryClose(), this);
     }

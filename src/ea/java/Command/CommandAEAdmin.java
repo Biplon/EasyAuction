@@ -26,38 +26,45 @@ public class CommandAEAdmin implements CommandExecutor
             {
                 CommandExecuteManager.getInstance().showCommandsAdminCommandExecute(player);
             }
-            else if (args[0].equals(LanguageManager.startCommandAlias))
+            else if (args.length == 2 && args[0].equals(LanguageManager.startCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().getPlayerStats(player,args[1],false);
             }
-            else if (args[0].equals(LanguageManager.winCommandAlias))
+            else if (args.length == 2 && args[0].equals(LanguageManager.winCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().getPlayerStats(player,args[1],true);
             }
             else if (args[0].equals(LanguageManager.enableCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().endisAuction(true, false);
+                player.sendMessage("enabled");
             }
             else if (args[0].equals(LanguageManager.disableCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().endisAuction(false, args.length == 2);
+                player.sendMessage("disabled");
             }
             else if (args[0].equals(LanguageManager.stopCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().stopAuction();
+                player.sendMessage("stopped");
             }
-            else if (args[0].equals(LanguageManager.banCommandAlias))
+            else if (args.length == 3 && args[0].equals(LanguageManager.banCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().banPlayer(args[1],Integer.parseInt(args[2]));
+                player.sendMessage("banned");
             }
-            else if (args[0].equals(LanguageManager.pardonCommandAlias))
+            else if (args.length == 2 && args[0].equals(LanguageManager.pardonCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().pardonPlayer(args[1]);
+                player.sendMessage("pardon");
             }
             else if (args[0].equals(LanguageManager.reloadCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().reload();
+                player.sendMessage("reload");
             }
+            return true;
         }
         return false;
     }
