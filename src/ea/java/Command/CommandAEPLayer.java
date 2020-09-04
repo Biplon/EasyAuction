@@ -1,12 +1,12 @@
 package ea.java.Command;
 
 import ea.java.Config.LanguageManager;
+import ea.java.Manager.CommandExecuteManager;
+import ea.java.Manager.GUIManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import static org.bukkit.Bukkit.getServer;
 
 public class CommandAEPLayer implements CommandExecutor
 {
@@ -23,22 +23,30 @@ public class CommandAEPLayer implements CommandExecutor
             }
             if (args.length == 0)
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().showCommandsCommandExecute(player);
+                return true;
             }
             else if (args[0].equals(LanguageManager.newCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().openNewAuctionGUI(player);
+                return true;
             }
-            else if (args[0].equals(LanguageManager.bidCommandAlias))
+            else if (args[0].equals(LanguageManager.bidCommandAlias) && args.length == 2)
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().playerBid(player,Integer.parseInt(args[1]));
             }
             else if (args[0].equals(LanguageManager.showCommandAlias))
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().showAuctionCommandExecute(player);
+                return true;
             }
+            else
+            {
+                CommandExecuteManager.getInstance().showCommandsCommandExecute(player);
+                return true;
+            }
+            return false;
         }
-
         return false;
     }
 }

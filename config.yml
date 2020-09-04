@@ -37,8 +37,10 @@ database:
     databaseName: 'dbname'
     #Tables name log (will auto create)
     tableNameLog: 'ea_logs'
-    #Tables name player will see auctions (will auto create)
+    #Tables name Player see auctions (will auto create)
     tableNameseeAuction: 'ea_player_see_auction'
+    #Tables name player ban from auction (will auto create)
+    tableNameAuctionBanPlayer: 'ea_player_ban_auction'
     #User name
     user: 'admin'
     #User password

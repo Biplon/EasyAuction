@@ -1,6 +1,7 @@
 package ea.java.Command;
 
 import ea.java.Config.LanguageManager;
+import ea.java.Manager.CommandExecuteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,7 @@ public class CommandAEAdmin implements CommandExecutor
             }
             if (args.length == 0)
             {
-                //TODO implement
+                CommandExecuteManager.getInstance().showCommandsAdminCommandExecute(player);
             }
             else if (args[0].equals(LanguageManager.startCommandAlias))
             {

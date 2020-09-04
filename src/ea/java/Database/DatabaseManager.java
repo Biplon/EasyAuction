@@ -1,12 +1,11 @@
 package ea.java.Database;
 
 import ea.java.EasyAuction;
+import org.bukkit.Bukkit;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
+import java.util.UUID;
 
 public class DatabaseManager
 {
@@ -17,6 +16,7 @@ public class DatabaseManager
     static String dbname;
     static String ea_logs;
     static String ea_player_see_auction;
+    static String ea_player_ban_auction;
 
     public static DatabaseManager getInstance()
     {
@@ -39,9 +39,10 @@ public class DatabaseManager
         String ssl = "";
         String username = EasyAuction.getInstance().getConfig().getString("database.mysql.user");
         String password = EasyAuction.getInstance().getConfig().getString("database.mysql.password");
-        if (EasyAuction.getInstance().getConfig().getBoolean("database.mysql.host"))
+        if (EasyAuction.getInstance().getConfig().getBoolean("database.mysql.sslEnabled"))
         {
-            ssl = "&sslMode=REQUIRED";
+            Bukkit.getLogger().info("awdawdawd");
+            ssl = "&sslMode=true";
         }
         String server = "jdbc:mysql://" + EasyAuction.getInstance().getConfig().getString("database.mysql.host") + ":" + EasyAuction.getInstance().getConfig().getString("database.mysql.port") + "/" + dbname + "?autoReconnect=true&allowMultiQueries=true&rewriteBatchedStatements=true" + ssl;
         try
@@ -77,8 +78,9 @@ public class DatabaseManager
     private void loadConfigValues()
     {
         dbname = EasyAuction.getInstance().getConfig().getString("database.mysql.databaseName");
-        ea_logs = EasyAuction.getInstance().getConfig().getString("database.mysql.ea_logs");
-        ea_player_see_auction = EasyAuction.getInstance().getConfig().getString("database.mysql.ea_player_see_auction");
+        ea_logs = EasyAuction.getInstance().getConfig().getString("database.mysql.tableNameLog");
+        ea_player_see_auction = EasyAuction.getInstance().getConfig().getString("database.mysql.tableNameseeAuction");
+        ea_player_ban_auction = EasyAuction.getInstance().getConfig().getString("database.mysql.tableNameAuctionBanPlayer");
     }
 
     private void setupTables()
@@ -93,12 +95,13 @@ public class DatabaseManager
                 {
 
                     data = "CREATE TABLE IF NOT EXISTS " + dbname + "." + ea_logs + " " +
-                            "(`uuid_player` CHAR(128) NOT NULL," +
+                            "(`id` INT NOT NULL," +
+                            "`uuid_player` CHAR(128) NOT NULL," +
                             "`start_time` DATETIME NULL," +
                             "`item` LONGTEXT NULL," +
                             "`uuid_winner` CHAR(128) NULL," +
                             "`price` INT NULL," +
-                            " PRIMARY KEY (`uuid_player`)) ENGINE = InnoDB  DEFAULT CHARSET=utf8" +
+                            " PRIMARY KEY (`id`)) ENGINE = InnoDB  DEFAULT CHARSET=utf8" +
                             " ROW_FORMAT = DYNAMIC;";
 
                     query = connection.prepareStatement(data);
@@ -107,6 +110,16 @@ public class DatabaseManager
                     data = "CREATE TABLE IF NOT EXISTS " + dbname + "." + ea_player_see_auction + " " +
                             "(`uuid_player` CHAR(128) NOT NULL," +
                             "`see_auction` TINYINT NULL," +
+                            " PRIMARY KEY (`uuid_player`)) ENGINE = InnoDB  DEFAULT CHARSET=utf8" +
+                            " ROW_FORMAT = DYNAMIC;";
+
+                    query = connection.prepareStatement(data);
+                    query.execute();
+
+                    data = "CREATE TABLE IF NOT EXISTS " + dbname + "." + ea_player_ban_auction + " " +
+                            "(`uuid_player` CHAR(128) NOT NULL," +
+                            "`start_time` DATETIME NULL," +
+                            "`time` INT NULL," +
                             " PRIMARY KEY (`uuid_player`)) ENGINE = InnoDB  DEFAULT CHARSET=utf8" +
                             " ROW_FORMAT = DYNAMIC;";
 
@@ -132,6 +145,139 @@ public class DatabaseManager
                     {
                         e.printStackTrace();
                     }
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+    }
+
+    public boolean playerSeeAuction(UUID id)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "SELECT see_auction FROM " + dbname + "." + ea_player_see_auction + " where uuid_player='" + id + "' ; ";
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    if (rs.next())
+                    {
+                       return rs.getBoolean("see_auction");
+                    }
+                    else
+                    {
+                        createPlayer(id);
+                    }
+
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                    return false;
+                }
+            }
+            return false;
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+        return false;
+        //TODO implement
+    }
+
+    private void createPlayer(UUID id)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "Insert into " + dbname + "." + ea_player_see_auction + " (uuid_player,see_auction) values('" + id + "','0'); ";
+                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player) values('" + id + "'); ";
+                    query = connection.prepareStatement(data);
+                    query.addBatch();
+                    query.executeBatch();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error load player inventory! Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+    }
+
+    public void disablePlayerSeeAuction(UUID id)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "UPDATE " + dbname + "." + ea_player_see_auction + " SET `see_auction` = '0' WHERE (`uuid_player` = '"+ id +"');";
+
+                    query = connection.prepareStatement(data);
+
+                    query.execute();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+    }
+
+    public void enablePlayerSeeAuction(UUID id)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "UPDATE " + dbname + "." + ea_player_see_auction + " SET `see_auction` = '1' WHERE (`uuid_player` = '"+ id +"');";
+
+                    query = connection.prepareStatement(data);
+
+                    query.execute();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
                 }
             }
         }
