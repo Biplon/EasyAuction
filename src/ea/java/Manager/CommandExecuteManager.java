@@ -3,6 +3,7 @@ package ea.java.Manager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
 import ea.java.EasyAuction;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -46,13 +47,34 @@ public class CommandExecuteManager
     {
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
         {
-            if (!CoolDownManager.getInstance().hasPlayerCoolDown(p.getUniqueId()) && AuctionManager.getInstance().enabled && !DatabaseManager.getInstance().playerBanned(p))
+            if (AuctionManager.getInstance().enabled)
             {
-                GUIManager.getInstance().openGUI(p);
+                if (AuctionManager.getInstance().getCurrentAuction() == null)
+                {
+                    if (!DatabaseManager.getInstance().playerBanned(p))
+                    {
+                        if (!CoolDownManager.getInstance().hasPlayerCoolDown(p.getUniqueId()))
+                        {
+                            GUIManager.getInstance().openGUI(p);
+                        }
+                        else
+                        {
+                            p.sendMessage(LanguageManager.coolDownText);
+                        }
+                    }
+                    else
+                    {
+                        p.sendMessage(LanguageManager.bannedText);
+                    }
+                }
+                else
+                {
+                    p.sendMessage(LanguageManager.auctionRunning);
+                }
             }
             else
             {
-                p.sendMessage(LanguageManager.coolDownText);
+                p.sendMessage(LanguageManager.auctionDisabled);
             }
         });
     }
@@ -69,16 +91,57 @@ public class CommandExecuteManager
         }
     }
 
-    public void playerBid(Player player, int parseInt)
+    public void playerBid(Player player, int bid)
     {
+        if (AuctionManager.getInstance().getCurrentAuction() != null)
+        {
+            if (AuctionManager.getInstance().getCurrentAuction().getPriceCurrent() + (AuctionManager.getInstance().getCurrentAuction().getStartPrice() * (EasyAuction.getInstance().getConfig().getInt("general.bidsteps") / 100)) < bid)
+            {
+                if (EconomyManager.getInstance().canBid(player,bid))
+                {
+                    if ( AuctionManager.getInstance().playerBid(player,bid))
+                    {
+                        player.sendMessage(LanguageManager.youBid);
+                    }
+                    else
+                    {
+                        player.sendMessage(LanguageManager.goWrong);
+                    }
+                }
+                else
+                {
+                    player.sendMessage(LanguageManager.notEnoughMoney);
+                }
+            }
+            else
+            {
+                player.sendMessage(LanguageManager.bidToLow);
+            }
+
+        }
+        else
+        {
+            player.sendMessage(LanguageManager.noAuctionRunning);
+        }
+
+
         //TODO implement
+    }
+
+    public void salesAuctionCommandExecute(Player player)
+    {
+        player.sendMessage(LanguageManager.salesPlayerText.replace("%money%",DatabaseManager.getInstance().getPlayerSales(player)));
     }
 
     //admin
 
     public void getPlayerStats(Player p, String name, boolean win)
     {
-        //TODO implement
+        String[] result = DatabaseManager.getInstance().getPlayerStats(name,win);
+        for (int i = 0; i < result.length; i++)
+        {
+            p.sendMessage(result[i]);
+        }
     }
 
     public void endisAuction(boolean active, boolean force)
@@ -129,4 +192,6 @@ public class CommandExecuteManager
     {
         //TODO implement
     }
+
+
 }

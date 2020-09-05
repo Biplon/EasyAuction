@@ -2,7 +2,6 @@ package ea.java.Command;
 
 import ea.java.Config.LanguageManager;
 import ea.java.Manager.CommandExecuteManager;
-import ea.java.Manager.GUIManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,6 +37,11 @@ public class CommandAEPLayer implements CommandExecutor
             else if (args[0].equals(LanguageManager.showCommandAlias))
             {
                 CommandExecuteManager.getInstance().showAuctionCommandExecute(player);
+                return true;
+            }
+            else if (args[0].equals(LanguageManager.salesCommandAlias))
+            {
+                CommandExecuteManager.getInstance().salesAuctionCommandExecute(player);
                 return true;
             }
             else

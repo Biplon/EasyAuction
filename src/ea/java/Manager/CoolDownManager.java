@@ -16,7 +16,7 @@ public class CoolDownManager
 
     private List<CoolDownGroup> cdGroups = new ArrayList<>();
 
-    static CoolDownManager instance;
+    private static CoolDownManager instance;
 
     public static CoolDownManager getInstance()
     {
@@ -54,7 +54,6 @@ public class CoolDownManager
 
     public void addPlayerHasCoolDown(Player p)
     {
-        //TODO implement in auction
         hasCoolDown.add(p.getUniqueId());
         UUID id = p.getUniqueId();
         Bukkit.getScheduler().runTaskLaterAsynchronously(EasyAuction.getInstance(),() -> removePlayerCoolDown(id),getPlayerCoolDown(p) * 60 * 20);

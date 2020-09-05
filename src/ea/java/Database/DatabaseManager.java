@@ -1,12 +1,17 @@
 package ea.java.Database;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import ea.java.EasyAuction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class DatabaseManager
@@ -120,8 +125,7 @@ public class DatabaseManager
 
                     data = "CREATE TABLE IF NOT EXISTS " + dbname + "." + ea_player_ban_auction + " " +
                             "(`uuid_player` CHAR(128) NOT NULL," +
-                            "`start_time` DATETIME NULL," +
-                            "`time` INT NULL," +
+                            "`end_time` DATETIME NULL," +
                             " PRIMARY KEY (`uuid_player`)) ENGINE = InnoDB  DEFAULT CHARSET=utf8" +
                             " ROW_FORMAT = DYNAMIC;";
 
@@ -331,10 +335,12 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
-                    Date dt = new Date();
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
-                    String date = sdf.format(dt);
-                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `start_time` = '"+ date +"', `time` = '"+ time +"' WHERE (`uuid_player` = '"+id+"');";
+
+
+                    int hours = time / 60;
+                    int minutes = time % 60;
+                    LocalDateTime actualDateTime = LocalDateTime.now();
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time` = '"+ actualDateTime.plusHours(hours).plusMinutes(minutes) +"' WHERE (`uuid_player` = '"+id+"');";
 
                     query = connection.prepareStatement(data);
 
@@ -354,7 +360,7 @@ public class DatabaseManager
         }
     }
 
-    public void pardonPlayer(UUID uniqueId)
+    public void pardonPlayer(UUID id)
     {
         try
         {
@@ -364,10 +370,10 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
-                    Date dt = new Date();
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
-                    String date = sdf.format(dt);
-                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `time` = '"+ 0 +"' WHERE (`uuid_player` = '"+uniqueId+"');";
+
+                    LocalDateTime actualDateTime = LocalDateTime.now();
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time` = '"+ actualDateTime +"' WHERE (`uuid_player` = '"+id+"');";
+
 
                     query = connection.prepareStatement(data);
 
@@ -389,8 +395,129 @@ public class DatabaseManager
 
     public boolean playerBanned(Player p)
     {
-        //TODO implement
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "SELECT end_time FROM " + dbname + "." + ea_player_ban_auction + " where uuid_player='" + p.getUniqueId() + "' ; ";
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    if (rs.next())
+                    {
+                        Date dt = new Date();
+                        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date=formatter.parse(rs.getString("end_time"));
+                        return date.after(dt);
+                    }
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                    return false;
+                }
+                catch (ParseException e)
+                {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            return false;
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
         return false;
+    }
+
+    public CharSequence getPlayerSales(Player p)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = " SELECT SUM(price) FROM  " + dbname + "." + ea_logs + " where player='" + p.getName() + "' ; ";
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    if (rs.next())
+                    {
+                        return rs.getString("SUM(price)");
+                    }
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+        return "0";
+    }
+
+    public String[] getPlayerStats(String name, boolean win)
+    {
+        try
+        {
+            List<String> tmp = new ArrayList<>();
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    if (win)
+                    {
+                        data = " SELECT * FROM  " + dbname + "." + ea_logs + " where winner='" + name + "' limit 10;";
+                    }
+                    else
+                    {
+                        data = " SELECT * FROM  " + dbname + "." + ea_logs + " where player='" + name + "' limit 10;";
+                    }
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    while (rs.next())
+                    {
+                        tmp.add("Start:"+ rs.getString("player")+", Time: " +rs.getString("start_time")+ " Item: " + rs.getString("item")+ " Winner: "+ rs.getString("winner")+" Price: " +rs.getString("price"));
+                    }
+                    String[] w = new String[tmp.size()];
+                    tmp.toArray(w);
+                    return w;
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+
+        return new String[0];
     }
 
     //TODO implement Insert Update Statements
@@ -398,6 +525,7 @@ public class DatabaseManager
     /*
     private void createStatementStrings()
     {
+
         addLOG = "INSERT INTO " + dbname + "." + ea_logs + " (`uuid_player`, `start_time`, `item`, `uuid_winner`, `price`) VALUES ('awdadawd', 'awdawd', '2020-08-22');";
     }
     */

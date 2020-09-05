@@ -3,6 +3,7 @@ package ea.java.Events;
 import ea.java.Config.LanguageManager;
 import ea.java.Enum.EGUIChange;
 import ea.java.Manager.AuctionManager;
+import ea.java.Manager.BlackList;
 import ea.java.Manager.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -47,8 +48,11 @@ public class OnInventoryClick implements Listener
         {
             if (e.getInventory().getItem(28) == null ||e.getInventory().getItem(28).getType()  == Material.AIR)
             {
-                e.getInventory().setItem(28,e.getCurrentItem());
-                e.getClickedInventory().setItem(e.getSlot(),new ItemStack(Material.AIR));
+                if (BlackList.getInstance().isNotOnBlackList(e.getCurrentItem()))
+                {
+                    e.getInventory().setItem(28, e.getCurrentItem());
+                    e.getClickedInventory().setItem(e.getSlot(), new ItemStack(Material.AIR));
+                }
             }
             return;
         }

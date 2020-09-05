@@ -20,6 +20,11 @@ public class LanguageManager
 
     public static String showCommandOutput;
     public static String coolDownText;
+    public static String bannedText;
+    public static String auctionRunning;
+    public static String auctionDisabled;
+    public static String salesPlayerText;
+    public static String noAuctionRunning;
 
     //GUI text
     public static String createAuctionGui;
@@ -59,6 +64,18 @@ public class LanguageManager
     public static String auctionStop;
     public static String auctionStopPlayerOff;
     public static String auctionStopAdmin;
+    public static String notEnoughMoney;
+    public static String bidToLow;
+    public static String goWrong;
+    public static String youBid;
+    public static String playerBid;
+    public static String auctionEndWinnerOff;
+    public static String moneyGet;
+    public static String itemGet;
+    public static String moneyRemoved;
+    public static String itemRemoved;
+    public static String auctionEndNoWinner;
+
 
     public static void loadLang()
     {
@@ -74,6 +91,26 @@ public class LanguageManager
         showCommandOutput = cfg.getString("showCommandOutput") != null ? cfg.getString("showCommandOutput") : "Show auctions:";
 
         coolDownText = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. You have cooldown!";
+        bannedText = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. You banned!";
+        auctionRunning = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. Auction all ready running";
+        auctionDisabled = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. Auction disabled!";
+        salesPlayerText = cfg.getString("salesPlayerText") != null ? cfg.getString("salesPlayerText") : "Your sales: %money%";
+        noAuctionRunning = cfg.getString("salesPlayerText") != null ? cfg.getString("salesPlayerText") : "No auction running";
+        notEnoughMoney = cfg.getString("notEnoughMoney") != null ? cfg.getString("notEnoughMoney") : "not enough money to bid";
+        bidToLow = cfg.getString("bidToLow") != null ? cfg.getString("bidToLow") : "bid to low";
+        goWrong = cfg.getString("goWrong") != null ? cfg.getString("goWrong") : "something went wrong";
+        youBid = cfg.getString("youBid") != null ? cfg.getString("youBid") : "bid accepted";
+        playerBid = cfg.getString("playerBid") != null ? cfg.getString("playerBid") : "%player% bid. New price: %price%";
+
+
+        auctionEndWinnerOff = cfg.getString("auctionEndWinnerOff") != null ? cfg.getString("auctionEndWinnerOff") : "Winner is offline auction canceled";
+        auctionEndNoWinner = cfg.getString("auctionEndNoWinner") != null ? cfg.getString("auctionEndNoWinner") : "Auction ends. No one bid";
+
+        moneyGet = cfg.getString("moneyGet") != null ? cfg.getString("moneyGet") : "Auction end. You got after fee: %money%.";
+        itemGet = cfg.getString("itemGet") != null ? cfg.getString("itemGet") : "Auction end. You got: %item%.";
+
+        moneyRemoved = cfg.getString("moneyRemoved") != null ? cfg.getString("moneyRemoved") : "Auction end. You paid: %money%.";
+        itemRemoved = cfg.getString("itemRemoved") != null ? cfg.getString("itemRemoved") : "Auction end. Item removed: %item%.";
 
         //GUI text
         createAuctionGui = cfg.getString("createAuctionGui") != null ? cfg.getString("createAuctionGui") : "New Auction";
@@ -101,7 +138,7 @@ public class LanguageManager
         banCommandAlias = cfg.getString("banCommandAlias") != null ? cfg.getString("banCommandAlias") : "ban";
         pardonCommandAlias = cfg.getString("pardonCommandAlias") != null ? cfg.getString("pardonCommandAlias") : "pardon";
         reloadCommandAlias = cfg.getString("reloadCommandAlias") != null ? cfg.getString("reloadCommandAlias") : "reload";
-        auctionAdminCommandAlias= cfg.getString("auctionAdminCommandAlias") != null ? cfg.getString("auctionAdminCommandAlias") : "auctionadmin";
+        auctionAdminCommandAlias = cfg.getString("auctionAdminCommandAlias") != null ? cfg.getString("auctionAdminCommandAlias") : "auctionadmin";
 
         //chat text
         auctionMinLeft = cfg.getString("auctionMinLeft") != null ? cfg.getString("auctionMinLeft") : "Auction ends in: %timeleft%";
@@ -114,6 +151,8 @@ public class LanguageManager
         auctionStop = cfg.getString("auctionStop") != null ? cfg.getString("auctionStop") : "Auction stopped.";
         auctionStopPlayerOff = cfg.getString("auctionStopPlayerOff") != null ? cfg.getString("auctionStopPlayerOff") : "Player offline";
         auctionStopAdmin = cfg.getString("auctionStopAdmin") != null ? cfg.getString("auctionStopAdmin") : "by Admin";
+
+
         //TODO implement language
     }
 }

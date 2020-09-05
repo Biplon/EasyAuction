@@ -1,9 +1,10 @@
 name: EasyAuction
 author: Vestri
 description: EasyAuction
-version: 0.3
+version: 0.4
 api-version: 1.15
 main: ea.java.EasyAuction
+depend: [Vault]
 permissions:
   ea.admin:
     description: admin

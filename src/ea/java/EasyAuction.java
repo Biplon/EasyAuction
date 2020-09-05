@@ -9,12 +9,11 @@ import ea.java.Events.OnInventoryClick;
 import ea.java.Events.OnInventoryClose;
 import ea.java.Events.OnPlayerLeave;
 import ea.java.Events.OnPlayerLogin;
-import ea.java.Manager.AuctionManager;
-import ea.java.Manager.CommandExecuteManager;
-import ea.java.Manager.CoolDownManager;
-import ea.java.Manager.GUIManager;
+import ea.java.Manager.*;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -41,8 +40,10 @@ public class EasyAuction extends JavaPlugin
         new GUIManager();
         new CoolDownManager();
         new AuctionManager();
+        new BlackList();
         regCommands();
         regEvents();
+        new EconomyManager();
     }
 
     private void regCommands()

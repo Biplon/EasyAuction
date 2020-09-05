@@ -51,5 +51,6 @@ public class Auction
         this.auctionStartPlayer = auctionStartPlayer;
         this.auctionItem = auctionItem;
         this.startPrice = startPrice;
+        this.priceCurrent = startPrice;
     }
 }
