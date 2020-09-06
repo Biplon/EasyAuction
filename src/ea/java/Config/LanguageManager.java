@@ -1,6 +1,7 @@
 package ea.java.Config;
 
 import ea.java.EasyAuction;
+import jdk.nashorn.internal.ir.LexicalContext;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -75,6 +76,9 @@ public class LanguageManager
     public static String moneyRemoved;
     public static String itemRemoved;
     public static String auctionEndNoWinner;
+    public static String auctionStartItemText;
+    public static String auctionStartPriceText;
+    public static String timeincreasse;
 
 
     public static void loadLang()
@@ -91,20 +95,20 @@ public class LanguageManager
         showCommandOutput = cfg.getString("showCommandOutput") != null ? cfg.getString("showCommandOutput") : "Show auctions:";
 
         coolDownText = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. You have cooldown!";
-        bannedText = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. You banned!";
-        auctionRunning = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. Auction all ready running";
-        auctionDisabled = cfg.getString("coolDownText") != null ? cfg.getString("coolDownText") : "Can not start auction. Auction disabled!";
+        bannedText = cfg.getString("bannedText") != null ? cfg.getString("bannedText") : "Can not start auction. You banned!";
+        auctionRunning = cfg.getString("auctionRunning") != null ? cfg.getString("auctionRunning") : "Can not start auction. Auction all ready running";
+        auctionDisabled = cfg.getString("auctionDisabled") != null ? cfg.getString("auctionDisabled") : "Can not start auction. Auction disabled!";
         salesPlayerText = cfg.getString("salesPlayerText") != null ? cfg.getString("salesPlayerText") : "Your sales: %money%";
-        noAuctionRunning = cfg.getString("salesPlayerText") != null ? cfg.getString("salesPlayerText") : "No auction running";
+        noAuctionRunning = cfg.getString("noAuctionRunning") != null ? cfg.getString("noAuctionRunning") : "No auction running";
         notEnoughMoney = cfg.getString("notEnoughMoney") != null ? cfg.getString("notEnoughMoney") : "not enough money to bid";
-        bidToLow = cfg.getString("bidToLow") != null ? cfg.getString("bidToLow") : "bid to low";
-        goWrong = cfg.getString("goWrong") != null ? cfg.getString("goWrong") : "something went wrong";
-        youBid = cfg.getString("youBid") != null ? cfg.getString("youBid") : "bid accepted";
-        playerBid = cfg.getString("playerBid") != null ? cfg.getString("playerBid") : "%player% bid. New price: %price%";
+        bidToLow = cfg.getString("bidToLow") != null ? cfg.getString("bidToLow") : "bid to low!";
+        goWrong = cfg.getString("goWrong") != null ? cfg.getString("goWrong") : "something went wrong!";
+        youBid = cfg.getString("youBid") != null ? cfg.getString("youBid") : "bid accepted!";
 
 
-        auctionEndWinnerOff = cfg.getString("auctionEndWinnerOff") != null ? cfg.getString("auctionEndWinnerOff") : "Winner is offline auction canceled";
-        auctionEndNoWinner = cfg.getString("auctionEndNoWinner") != null ? cfg.getString("auctionEndNoWinner") : "Auction ends. No one bid";
+
+        auctionEndWinnerOff = cfg.getString("auctionEndWinnerOff") != null ? cfg.getString("auctionEndWinnerOff") : "Winner is offline auction canceled!";
+        auctionEndNoWinner = cfg.getString("auctionEndNoWinner") != null ? cfg.getString("auctionEndNoWinner") : "Auction ends. No one bid!";
 
         moneyGet = cfg.getString("moneyGet") != null ? cfg.getString("moneyGet") : "Auction end. You got after fee: %money%.";
         itemGet = cfg.getString("itemGet") != null ? cfg.getString("itemGet") : "Auction end. You got: %item%.";
@@ -116,7 +120,7 @@ public class LanguageManager
         createAuctionGui = cfg.getString("createAuctionGui") != null ? cfg.getString("createAuctionGui") : "New Auction";
         timeplus = cfg.getString("timeplus") != null ? cfg.getString("timeplus") : "Increase auction time";
         timeminus = cfg.getString("timeminus") != null ? cfg.getString("timeminus") : "Decrease auction time";
-        timecur = cfg.getString("timecur") != null ? cfg.getString("timecur") : "Auction time: ";
+        timecur = cfg.getString("timecur") != null ? cfg.getString("timecur") : "Auction time:";
         insertitem = cfg.getString("insertitem") != null ? cfg.getString("insertitem") : "Insert item below:";
 
         moneyplus = cfg.getString("moneyplus") != null ? cfg.getString("moneyplus") : "Increase start price:";
@@ -126,7 +130,7 @@ public class LanguageManager
 
         moneycur = cfg.getString("moneycur") != null ? cfg.getString("moneycur") : "Start price:";
 
-        startauction = cfg.getString("startauction") != null ? cfg.getString("startauction") : "Start auction";
+        startauction = cfg.getString("startauction") != null ? cfg.getString("startauction") : "Start auction!";
 
 
         //admin command alias
@@ -142,8 +146,13 @@ public class LanguageManager
 
         //chat text
         auctionMinLeft = cfg.getString("auctionMinLeft") != null ? cfg.getString("auctionMinLeft") : "Auction ends in: %timeleft%";
-        auctionStartText = cfg.getString("auctionStartText") != null ? cfg.getString("auctionStartText") : "Auction started! %item% Price: %startprice%";
-        auctionRunText = cfg.getString("auctionRunText") != null ? cfg.getString("auctionRunText") : "%item% Price: %price%";
+        auctionStartText = cfg.getString("auctionStartText") != null ? cfg.getString("auctionStartText") : "Auction started!";
+        auctionStartItemText = cfg.getString("auctionStartItemText") != null ? cfg.getString("auctionStartItemText") : "Item: %item%";
+        auctionStartPriceText = cfg.getString("auctionStartPriceText") != null ? cfg.getString("auctionStartPriceText") : "Start price: %startprice%";
+
+        playerBid = cfg.getString("playerBid") != null ? cfg.getString("playerBid") : "%player% bid. New price: %price%";
+
+        auctionRunText = cfg.getString("auctionRunText") != null ? cfg.getString("auctionRunText") : "%item% Price: %price% Last bid: %bidplayer%";
         minText = cfg.getString("mintext") != null ? cfg.getString("mintext") : "min";
         secText = cfg.getString("sectext") != null ? cfg.getString("sectext") : "sec";
         auctionEnd = cfg.getString("auctionEnd") != null ? cfg.getString("auctionEnd") : "Auction ends. Winner is: %winner%";
@@ -152,6 +161,7 @@ public class LanguageManager
         auctionStopPlayerOff = cfg.getString("auctionStopPlayerOff") != null ? cfg.getString("auctionStopPlayerOff") : "Player offline";
         auctionStopAdmin = cfg.getString("auctionStopAdmin") != null ? cfg.getString("auctionStopAdmin") : "by Admin";
 
+        timeincreasse = cfg.getString("timeincreasse") != null ? cfg.getString("timeincreasse") : "Auction time increased: %time%!";
 
         //TODO implement language
     }

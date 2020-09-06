@@ -520,6 +520,43 @@ public class DatabaseManager
         return new String[0];
     }
 
+    public String getPlayerBannedTime(Player p)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "SELECT end_time FROM " + dbname + "." + ea_player_ban_auction + " where uuid_player='" + p.getUniqueId() + "' ; ";
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    if (rs.next())
+                    {
+                        return rs.getString("end_time");
+                    }
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                    return "";
+                }
+            }
+            return "";
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+        return "";
+    }
+
     //TODO implement Insert Update Statements
 
     /*

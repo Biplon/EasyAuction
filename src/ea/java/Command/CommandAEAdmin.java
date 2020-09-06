@@ -7,8 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static org.bukkit.Bukkit.getServer;
-
 public class CommandAEAdmin implements CommandExecutor
 {
     @Override
@@ -28,20 +26,20 @@ public class CommandAEAdmin implements CommandExecutor
             }
             else if (args.length == 2 && args[0].equals(LanguageManager.startCommandAlias))
             {
-                CommandExecuteManager.getInstance().getPlayerStats(player,args[1],false);
+                CommandExecuteManager.getInstance().getPlayerStats(player, args[1], false);
             }
             else if (args.length == 2 && args[0].equals(LanguageManager.winCommandAlias))
             {
-                CommandExecuteManager.getInstance().getPlayerStats(player,args[1],true);
+                CommandExecuteManager.getInstance().getPlayerStats(player, args[1], true);
             }
             else if (args[0].equals(LanguageManager.enableCommandAlias))
             {
-                CommandExecuteManager.getInstance().endisAuction(true, false);
+                CommandExecuteManager.getInstance().enThisAuction(true, false);
                 player.sendMessage("enabled");
             }
             else if (args[0].equals(LanguageManager.disableCommandAlias))
             {
-                CommandExecuteManager.getInstance().endisAuction(false, args.length == 2);
+                CommandExecuteManager.getInstance().enThisAuction(false, args.length == 2);
                 player.sendMessage("disabled");
             }
             else if (args[0].equals(LanguageManager.stopCommandAlias))
@@ -51,7 +49,7 @@ public class CommandAEAdmin implements CommandExecutor
             }
             else if (args.length == 3 && args[0].equals(LanguageManager.banCommandAlias))
             {
-                CommandExecuteManager.getInstance().banPlayer(args[1],Integer.parseInt(args[2]));
+                CommandExecuteManager.getInstance().banPlayer(args[1], Integer.parseInt(args[2]));
                 player.sendMessage("banned");
             }
             else if (args.length == 2 && args[0].equals(LanguageManager.pardonCommandAlias))
@@ -66,6 +64,15 @@ public class CommandAEAdmin implements CommandExecutor
             }
             return true;
         }
+        if (args[0].equals(LanguageManager.disableCommandAlias))
+        {
+            CommandExecuteManager.getInstance().enThisAuction(false, args.length == 2);
+        }
+        else if (args[0].equals(LanguageManager.enableCommandAlias))
+        {
+            CommandExecuteManager.getInstance().enThisAuction(true, false);
+        }
+
         return false;
     }
 }

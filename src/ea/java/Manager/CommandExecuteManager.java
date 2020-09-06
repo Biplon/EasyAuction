@@ -1,5 +1,6 @@
 package ea.java.Manager;
 
+import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
 import ea.java.EasyAuction;
@@ -64,7 +65,7 @@ public class CommandExecuteManager
                     }
                     else
                     {
-                        p.sendMessage(LanguageManager.bannedText);
+                        p.sendMessage(LanguageManager.bannedText + DatabaseManager.getInstance().getPlayerBannedTime(p));
                     }
                 }
                 else
@@ -144,7 +145,7 @@ public class CommandExecuteManager
         }
     }
 
-    public void endisAuction(boolean active, boolean force)
+    public void enThisAuction(boolean active, boolean force)
     {
         AuctionManager.getInstance().enabled = active;
         if (force && AuctionManager.getInstance().getCurrentAuction() != null)
@@ -190,7 +191,8 @@ public class CommandExecuteManager
 
     public void reload()
     {
-        //TODO implement
+        ConfigManager.loadConfig();
+        CoolDownManager.getInstance().loadCoolDownGroups();
     }
 
 

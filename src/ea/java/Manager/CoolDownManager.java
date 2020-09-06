@@ -29,8 +29,9 @@ public class CoolDownManager
         loadCoolDownGroups();
     }
     
-    private void loadCoolDownGroups()
+    public void loadCoolDownGroups()
     {
+        cdGroups.clear();
         boolean groupFound = true;
         int count = 0;
         while (groupFound)
