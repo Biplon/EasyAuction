@@ -12,6 +12,7 @@ public class LanguageManager
     //player commands
     public static String newCommandAlias;
     public static String bidCommandAlias;
+    public static String bidCommandAliasShort;
     public static String salesCommandAlias;
     public static String showCommandAlias;
 
@@ -81,6 +82,7 @@ public class LanguageManager
     public static String timeincreasse;
 
 
+
     public static void loadLang()
     {
         File configFile = new File("plugins" + File.separator + EasyAuction.getInstance().getName() + File.separator + EasyAuction.getInstance().getConfig().getString("general.lang") + ".yml");
@@ -88,6 +90,7 @@ public class LanguageManager
         //player command alias
         newCommandAlias = cfg.getString("newCommandAlias") != null ? cfg.getString("newCommandAlias") : "new";
         bidCommandAlias = cfg.getString("bidCommandAlias") != null ? cfg.getString("bidCommandAlias") : "bid";
+        bidCommandAliasShort = cfg.getString("bidCommandAliasShort") != null ? cfg.getString("bidCommandAliasShort") : "bid";
         salesCommandAlias = cfg.getString("salesCommandAlias") != null ? cfg.getString("salesCommandAlias") : "sales";
         showCommandAlias = cfg.getString("showCommandAlias") != null ? cfg.getString("showCommandAlias") : "show";
         auctionCommandAlias = cfg.getString("auctionCommandAlias") != null ? cfg.getString("auctionCommandAlias") : "auction";

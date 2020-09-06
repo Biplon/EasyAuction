@@ -1,7 +1,8 @@
 package ea.java;
 
 import ea.java.Command.CommandAEAdmin;
-import ea.java.Command.CommandAEPLayer;
+import ea.java.Command.CommandAEPlayer;
+import ea.java.Command.CommandAEPlayerBid;
 import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
@@ -10,10 +11,8 @@ import ea.java.Events.OnInventoryClose;
 import ea.java.Events.OnPlayerLeave;
 import ea.java.Events.OnPlayerLogin;
 import ea.java.Manager.*;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -48,7 +47,8 @@ public class EasyAuction extends JavaPlugin
 
     private void regCommands()
     {
-        Objects.requireNonNull(this.getCommand("auction")).setExecutor(new CommandAEPLayer());
+        Objects.requireNonNull(this.getCommand("auction")).setExecutor(new CommandAEPlayer());
+        Objects.requireNonNull(this.getCommand("bid")).setExecutor(new CommandAEPlayerBid());
         Objects.requireNonNull(this.getCommand("auctionadmin")).setExecutor(new CommandAEAdmin());
         List<String> alias = new ArrayList<>();
         alias.add(LanguageManager.auctionCommandAlias);
@@ -56,6 +56,9 @@ public class EasyAuction extends JavaPlugin
         alias.clear();
         alias.add(LanguageManager.auctionAdminCommandAlias);
         Objects.requireNonNull(this.getCommand("auctionadmin")).setAliases(alias);
+        alias.clear();
+        alias.add(LanguageManager.auctionAdminCommandAlias);
+        Objects.requireNonNull(this.getCommand("bid")).setAliases(alias);
     }
 
     private void regEvents()

@@ -30,6 +30,7 @@ public class CommandExecuteManager
     {
         p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.newCommandAlias);
         p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.bidCommandAlias);
+        p.sendMessage("/" + LanguageManager.bidCommandAliasShort);
         p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.salesCommandAlias);
         p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.showCommandAlias);
     }

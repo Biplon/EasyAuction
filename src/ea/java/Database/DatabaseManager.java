@@ -213,8 +213,11 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
+                    Date dt = new Date();
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
+                    String date = sdf.format(dt);
                     data = "Insert into " + dbname + "." + ea_player_see_auction + " (uuid_player,see_auction) values('" + id + "','0'); ";
-                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player) values('" + id + "'); ";
+                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player,end_time) values('" + id + "','"+ date +"'); ";
                     query = connection.prepareStatement(data);
                     query.addBatch();
                     query.executeBatch();
@@ -410,10 +413,14 @@ public class DatabaseManager
                     ResultSet rs = query.executeQuery();
                     if (rs.next())
                     {
-                        Date dt = new Date();
-                        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        Date date=formatter.parse(rs.getString("end_time"));
-                        return date.after(dt);
+                        if (rs.getString("end_time")!= null)
+                        {
+                            Date dt = new Date();
+                            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date date=formatter.parse(rs.getString("end_time"));
+                            return date.after(dt);
+                        }
+                        return false;
                     }
                 }
                 catch (SQLException e)
