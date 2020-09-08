@@ -194,6 +194,7 @@ public class CommandExecuteManager
     {
         ConfigManager.loadConfig();
         CoolDownManager.getInstance().loadCoolDownGroups();
+        BlackList.getInstance().loadBlackList();
     }
 
 

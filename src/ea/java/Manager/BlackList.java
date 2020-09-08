@@ -25,8 +25,9 @@ public class BlackList
         loadBlackList();
     }
 
-    private void loadBlackList()
+    public void loadBlackList()
     {
+        blacklistlore.clear();
         boolean blackListFound = true;
         int count = 0;
         while (blackListFound)
@@ -47,7 +48,15 @@ public class BlackList
     {
         if (Objects.requireNonNull(currentItem.getItemMeta()).hasLore())
         {
-            return !blacklistlore.contains(currentItem.getItemMeta().getLore().get(0));
+            String lore = currentItem.getItemMeta().getLore().get(0);
+            for (String s: blacklistlore)
+            {
+                if (s.contains(lore))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         else
         {
