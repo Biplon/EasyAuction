@@ -23,17 +23,18 @@ public class GUIManager
 
     private static final ItemStack defaultGuiItem = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ", "");
     private static final ItemStack defaultGuiItem2 = createGuiItem(Material.YELLOW_STAINED_GLASS_PANE, " ", "");
+
     public GUIManager()
     {
         instance = this;
     }
 
-    public void changeItemValue(EGUIChange change,int value,Inventory inv)
+    public void changeItemValue(EGUIChange change, int value, Inventory inv)
     {
         switch (change)
         {
             case Time:
-                int time =  Integer.parseInt(inv.getItem(22).getItemMeta().getLore().get(0))+value;
+                int time = Integer.parseInt(inv.getItem(22).getItemMeta().getLore().get(0)) + value;
                 if (time < EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMin"))
                 {
                     time = EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMin");
@@ -42,15 +43,15 @@ public class GUIManager
                 {
                     time = EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMax");
                 }
-                inv.setItem(22,createGuiItem(Material.PAPER,LanguageManager.timecur,""+ time));
+                inv.setItem(22, createGuiItem(Material.PAPER, LanguageManager.timecur, "" + time));
                 break;
             case Money:
-                int money = Integer.parseInt(inv.getItem(25).getItemMeta().getLore().get(0) )+value;
+                int money = Integer.parseInt(inv.getItem(25).getItemMeta().getLore().get(0)) + value;
                 if (money <= 0)
                 {
                     money = 1;
                 }
-                inv.setItem(25,createGuiItem(Material.PAPER,LanguageManager.moneycur,""+ money));
+                inv.setItem(25, createGuiItem(Material.PAPER, LanguageManager.moneycur, "" + money));
                 break;
         }
     }
@@ -96,27 +97,27 @@ public class GUIManager
 
     private void setSpecialItems(Inventory inv)
     {
-        inv.setItem(13,createGuiItem(Material.CLOCK,LanguageManager.timeplus,"+5"));
-        inv.setItem(31,createGuiItem(Material.CLOCK,LanguageManager.timeminus,"-5"));
+        inv.setItem(13, createGuiItem(Material.CLOCK, LanguageManager.timeplus, "+5"));
+        inv.setItem(31, createGuiItem(Material.CLOCK, LanguageManager.timeminus, "-5"));
 
 
-        inv.setItem(15,createGuiItem(Material.IRON_INGOT,LanguageManager.moneyplus,"+1"));
-        inv.setItem(17,createGuiItem(Material.IRON_INGOT,LanguageManager.moneyminus,"-1"));
-        inv.setItem(24,createGuiItem(Material.GOLD_INGOT,LanguageManager.moneyplus,"+10"));
-        inv.setItem(26,createGuiItem(Material.GOLD_INGOT,LanguageManager.moneyminus,"-10"));
-        inv.setItem(33,createGuiItem(Material.EMERALD,LanguageManager.moneyplus,"+100"));
-        inv.setItem(35,createGuiItem(Material.EMERALD,LanguageManager.moneyminus,"-100"));
-        inv.setItem(42,createGuiItem(Material.DIAMOND,LanguageManager.moneyplus,"+1000"));
-        inv.setItem(44,createGuiItem(Material.DIAMOND,LanguageManager.moneyminus,"-1000"));
+        inv.setItem(15, createGuiItem(Material.IRON_INGOT, LanguageManager.moneyplus, "+1"));
+        inv.setItem(17, createGuiItem(Material.IRON_INGOT, LanguageManager.moneyminus, "-1"));
+        inv.setItem(24, createGuiItem(Material.GOLD_INGOT, LanguageManager.moneyplus, "+10"));
+        inv.setItem(26, createGuiItem(Material.GOLD_INGOT, LanguageManager.moneyminus, "-10"));
+        inv.setItem(33, createGuiItem(Material.EMERALD, LanguageManager.moneyplus, "+100"));
+        inv.setItem(35, createGuiItem(Material.EMERALD, LanguageManager.moneyminus, "-100"));
+        inv.setItem(42, createGuiItem(Material.DIAMOND, LanguageManager.moneyplus, "+1000"));
+        inv.setItem(44, createGuiItem(Material.DIAMOND, LanguageManager.moneyminus, "-1000"));
 
 
-        inv.setItem(19,createGuiItem(Material.PAPER,LanguageManager.insertitem));
+        inv.setItem(19, createGuiItem(Material.PAPER, LanguageManager.insertitem));
 
-        inv.setItem(22,createGuiItem(Material.PAPER,LanguageManager.timecur,""+EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMin")));
+        inv.setItem(22, createGuiItem(Material.PAPER, LanguageManager.timecur, "" + EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMin")));
 
-        inv.setItem(25,createGuiItem(Material.PAPER,LanguageManager.moneycur,"1"));
+        inv.setItem(25, createGuiItem(Material.PAPER, LanguageManager.moneycur, "1"));
 
-        inv.setItem(49,createGuiItem(Material.LIME_DYE,LanguageManager.startauction));
+        inv.setItem(49, createGuiItem(Material.LIME_DYE, LanguageManager.startauction));
     }
 
     private static ItemStack createGuiItem(final Material material, final String name, final String... lore)

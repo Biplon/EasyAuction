@@ -5,7 +5,6 @@ import ea.java.Enum.EGUIChange;
 import ea.java.Manager.AuctionManager;
 import ea.java.Manager.BlackList;
 import ea.java.Manager.GUIManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +45,7 @@ public class OnInventoryClick implements Listener
         }
         else if (Objects.requireNonNull(e.getClickedInventory()).getType() == InventoryType.PLAYER)
         {
-            if (e.getInventory().getItem(28) == null ||e.getInventory().getItem(28).getType()  == Material.AIR)
+            if (e.getInventory().getItem(28) == null || e.getInventory().getItem(28).getType() == Material.AIR)
             {
                 if (BlackList.getInstance().isNotOnBlackList(e.getCurrentItem()))
                 {
@@ -57,37 +56,30 @@ public class OnInventoryClick implements Listener
             return;
         }
 
-
-
         if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.timeplus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Time,5,e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Time, 5, e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.timeminus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Time,-5,e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Time, -5, e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.moneyplus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Money,Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)),e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Money, Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)), e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.moneyminus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Money,Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)),e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Money, Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)), e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.startauction))
         {
             if (AuctionManager.getInstance().getCurrentAuction() == null && (e.getInventory().getItem(28) != null || e.getInventory().getItem(28).getType() != Material.AIR))
             {
-                AuctionManager.getInstance().startAuction(p,e.getInventory().getItem(28),Integer.parseInt(e.getInventory().getItem(25).getItemMeta().getLore().get(0)),Integer.parseInt(e.getInventory().getItem(22).getItemMeta().getLore().get(0)));
-                e.getInventory().setItem(28,null);
+                AuctionManager.getInstance().startAuction(p, e.getInventory().getItem(28), Integer.parseInt(e.getInventory().getItem(25).getItemMeta().getLore().get(0)), Integer.parseInt(e.getInventory().getItem(22).getItemMeta().getLore().get(0)));
+                e.getInventory().setItem(28, null);
                 p.closeInventory();
             }
-            else
-            {
-                //TODO text can not start
-            }
-            //TODO implement start auction
         }
 
     }

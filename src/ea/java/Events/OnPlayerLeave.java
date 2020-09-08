@@ -6,7 +6,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-
 public class OnPlayerLeave implements Listener
 {
     @EventHandler(priority = EventPriority.LOWEST)
@@ -16,7 +15,7 @@ public class OnPlayerLeave implements Listener
         {
             if (AuctionManager.getInstance().getCurrentAuction().getAuctionStartPlayer() == event.getPlayer())
             {
-                AuctionManager.getInstance().stopAuction(true,event.getPlayer());
+                AuctionManager.getInstance().stopAuction(true, event.getPlayer());
             }
         }
     }

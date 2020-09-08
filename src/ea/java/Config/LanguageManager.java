@@ -1,7 +1,6 @@
 package ea.java.Config;
 
 import ea.java.EasyAuction;
-import jdk.nashorn.internal.ir.LexicalContext;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -15,7 +14,6 @@ public class LanguageManager
     public static String bidCommandAliasShort;
     public static String salesCommandAlias;
     public static String showCommandAlias;
-
     public static String auctionCommandAlias;
 
     //player commands outputText
@@ -35,13 +33,9 @@ public class LanguageManager
     public static String timeminus;
     public static String timecur;
     public static String insertitem;
-
     public static String moneyplus;
-
     public static String moneyminus;
-
     public static String startauction;
-
     public static String moneycur;
 
     //admin commands
@@ -53,7 +47,6 @@ public class LanguageManager
     public static String banCommandAlias;
     public static String pardonCommandAlias;
     public static String reloadCommandAlias;
-
     public static String auctionAdminCommandAlias;
 
     //chat text
@@ -81,8 +74,6 @@ public class LanguageManager
     public static String auctionStartPriceText;
     public static String timeincreasse;
 
-
-
     public static void loadLang()
     {
         File configFile = new File("plugins" + File.separator + EasyAuction.getInstance().getName() + File.separator + EasyAuction.getInstance().getConfig().getString("general.lang") + ".yml");
@@ -107,15 +98,10 @@ public class LanguageManager
         bidToLow = cfg.getString("bidToLow") != null ? cfg.getString("bidToLow") : "bid to low!";
         goWrong = cfg.getString("goWrong") != null ? cfg.getString("goWrong") : "something went wrong!";
         youBid = cfg.getString("youBid") != null ? cfg.getString("youBid") : "bid accepted!";
-
-
-
         auctionEndWinnerOff = cfg.getString("auctionEndWinnerOff") != null ? cfg.getString("auctionEndWinnerOff") : "Winner is offline auction canceled!";
         auctionEndNoWinner = cfg.getString("auctionEndNoWinner") != null ? cfg.getString("auctionEndNoWinner") : "Auction ends. No one bid!";
-
         moneyGet = cfg.getString("moneyGet") != null ? cfg.getString("moneyGet") : "Auction end. You got after fee: %money%.";
         itemGet = cfg.getString("itemGet") != null ? cfg.getString("itemGet") : "Auction end. You got: %item%.";
-
         moneyRemoved = cfg.getString("moneyRemoved") != null ? cfg.getString("moneyRemoved") : "Auction end. You paid: %money%.";
         itemRemoved = cfg.getString("itemRemoved") != null ? cfg.getString("itemRemoved") : "Auction end. Item removed: %item%.";
 
@@ -125,16 +111,10 @@ public class LanguageManager
         timeminus = cfg.getString("timeminus") != null ? cfg.getString("timeminus") : "Decrease auction time";
         timecur = cfg.getString("timecur") != null ? cfg.getString("timecur") : "Auction time:";
         insertitem = cfg.getString("insertitem") != null ? cfg.getString("insertitem") : "Insert item below:";
-
         moneyplus = cfg.getString("moneyplus") != null ? cfg.getString("moneyplus") : "Increase start price:";
-
-
         moneyminus = cfg.getString("moneyminus") != null ? cfg.getString("moneyminus") : "Lower start price:";
-
         moneycur = cfg.getString("moneycur") != null ? cfg.getString("moneycur") : "Start price:";
-
         startauction = cfg.getString("startauction") != null ? cfg.getString("startauction") : "Start auction!";
-
 
         //admin command alias
         startCommandAlias = cfg.getString("startCommandAlias") != null ? cfg.getString("startCommandAlias") : "start";
@@ -163,9 +143,6 @@ public class LanguageManager
         auctionStop = cfg.getString("auctionStop") != null ? cfg.getString("auctionStop") : "Auction stopped.";
         auctionStopPlayerOff = cfg.getString("auctionStopPlayerOff") != null ? cfg.getString("auctionStopPlayerOff") : "Player offline";
         auctionStopAdmin = cfg.getString("auctionStopAdmin") != null ? cfg.getString("auctionStopAdmin") : "by Admin";
-
         timeincreasse = cfg.getString("timeincreasse") != null ? cfg.getString("timeincreasse") : "Auction time increased: %time%!";
-
-        //TODO implement language
     }
 }

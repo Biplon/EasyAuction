@@ -13,7 +13,7 @@ public class Auction
 
     private Player bidPlayer;
 
-    private int priceCurrent = 0;
+    private int priceCurrent;
 
     public Player getAuctionStartPlayer()
     {
@@ -40,7 +40,7 @@ public class Auction
         return priceCurrent;
     }
 
-    public void setBidPlayer(Player bidPlayer,int priceCurrent)
+    public void setBidPlayer(Player bidPlayer, int priceCurrent)
     {
         this.bidPlayer = bidPlayer;
         this.priceCurrent = priceCurrent;

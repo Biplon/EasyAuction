@@ -6,11 +6,10 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PlayerSeeAuctionManager
 {
-    private static List<Player> playerSeeAuction = new ArrayList<>();
+    private static final List<Player> playerSeeAuction = new ArrayList<>();
 
     public static List<Player> getPlayerSeeAuction()
     {
@@ -51,31 +50,6 @@ public class PlayerSeeAuctionManager
         if (DatabaseManager.getInstance().playerSeeAuction(p.getUniqueId()))
         {
             playerSeeAuction.add(p);
-        }
-    }
-
-    private static void clearList()
-    {
-        List<Player> tmp = new ArrayList<>();
-        for (Player p : playerSeeAuction)
-        {
-            if (p != null && p.isOnline())
-            {
-                tmp.add(p);
-            }
-        }
-        playerSeeAuction = tmp;
-    }
-
-    public static void sendAuctionMessage(String message)
-    {
-        clearList();
-        for (Player p : playerSeeAuction)
-        {
-            if (p != null && p.isOnline())
-            {
-                p.sendMessage(message);
-            }
         }
     }
 }

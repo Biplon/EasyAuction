@@ -1,7 +1,5 @@
 package ea.java.Command;
 
-import com.google.gson.internal.$Gson$Types;
-import ea.java.Config.LanguageManager;
 import ea.java.Manager.CommandExecuteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,7 +21,7 @@ public class CommandAEPlayerBid implements CommandExecutor
             }
             if (args.length == 1)
             {
-                CommandExecuteManager.getInstance().playerBid(player,Integer.parseInt(args[0]));
+                CommandExecuteManager.getInstance().playerBid(player, Integer.parseInt(args[0]));
                 return true;
             }
         }

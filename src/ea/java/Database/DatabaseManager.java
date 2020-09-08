@@ -1,6 +1,5 @@
 package ea.java.Database;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import ea.java.EasyAuction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class DatabaseManager
 {
     static DatabaseManager instance;
-
     static Connection connection;
 
     static String dbname;
@@ -177,13 +175,12 @@ public class DatabaseManager
                     ResultSet rs = query.executeQuery();
                     if (rs.next())
                     {
-                       return rs.getBoolean("see_auction");
+                        return rs.getBoolean("see_auction");
                     }
                     else
                     {
                         createPlayer(id);
                     }
-
                 }
                 catch (SQLException e)
                 {
@@ -200,7 +197,6 @@ public class DatabaseManager
             throwable.printStackTrace();
         }
         return false;
-        //TODO implement
     }
 
     private void createPlayer(UUID id)
@@ -217,7 +213,7 @@ public class DatabaseManager
                     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
                     String date = sdf.format(dt);
                     data = "Insert into " + dbname + "." + ea_player_see_auction + " (uuid_player,see_auction) values('" + id + "','0'); ";
-                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player,end_time) values('" + id + "','"+ date +"'); ";
+                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player,end_time) values('" + id + "','" + date + "'); ";
                     query = connection.prepareStatement(data);
                     query.addBatch();
                     query.executeBatch();
@@ -236,7 +232,7 @@ public class DatabaseManager
         }
     }
 
-    public void createLog(String player,String item,String winner,int price)
+    public void createLog(String player, String item, String winner, int price)
     {
         try
         {
@@ -249,7 +245,7 @@ public class DatabaseManager
                     Date dt = new Date();
                     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
                     String date = sdf.format(dt);
-                    data = "Insert into " + dbname + "." + ea_logs + " (player,start_time,item,winner,price) values('" + player + "','"+ date +"','"+ item +"','"+ winner +"','"+ price +"'); ";
+                    data = "Insert into " + dbname + "." + ea_logs + " (player,start_time,item,winner,price) values('" + player + "','" + date + "','" + item + "','" + winner + "','" + price + "'); ";
                     query = connection.prepareStatement(data);
                     query.addBatch();
                     query.executeBatch();
@@ -278,7 +274,7 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
-                    data = "UPDATE " + dbname + "." + ea_player_see_auction + " SET `see_auction` = '0' WHERE (`uuid_player` = '"+ id +"');";
+                    data = "UPDATE " + dbname + "." + ea_player_see_auction + " SET `see_auction` = '0' WHERE (`uuid_player` = '" + id + "');";
 
                     query = connection.prepareStatement(data);
 
@@ -308,7 +304,7 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
-                    data = "UPDATE " + dbname + "." + ea_player_see_auction + " SET `see_auction` = '1' WHERE (`uuid_player` = '"+ id +"');";
+                    data = "UPDATE " + dbname + "." + ea_player_see_auction + " SET `see_auction` = '1' WHERE (`uuid_player` = '" + id + "');";
 
                     query = connection.prepareStatement(data);
 
@@ -328,7 +324,7 @@ public class DatabaseManager
         }
     }
 
-    public void banPlayer(UUID id,int time)
+    public void banPlayer(UUID id, int time)
     {
         try
         {
@@ -338,12 +334,10 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
-
-
                     int hours = time / 60;
                     int minutes = time % 60;
                     LocalDateTime actualDateTime = LocalDateTime.now();
-                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time` = '"+ actualDateTime.plusHours(hours).plusMinutes(minutes) +"' WHERE (`uuid_player` = '"+id+"');";
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time` = '" + actualDateTime.plusHours(hours).plusMinutes(minutes) + "' WHERE (`uuid_player` = '" + id + "');";
 
                     query = connection.prepareStatement(data);
 
@@ -373,10 +367,8 @@ public class DatabaseManager
                 PreparedStatement query;
                 try
                 {
-
                     LocalDateTime actualDateTime = LocalDateTime.now();
-                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time` = '"+ actualDateTime +"' WHERE (`uuid_player` = '"+id+"');";
-
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time` = '" + actualDateTime + "' WHERE (`uuid_player` = '" + id + "');";
 
                     query = connection.prepareStatement(data);
 
@@ -413,11 +405,11 @@ public class DatabaseManager
                     ResultSet rs = query.executeQuery();
                     if (rs.next())
                     {
-                        if (rs.getString("end_time")!= null)
+                        if (rs.getString("end_time") != null)
                         {
                             Date dt = new Date();
-                            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            Date date=formatter.parse(rs.getString("end_time"));
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date date = formatter.parse(rs.getString("end_time"));
                             return date.after(dt);
                         }
                         return false;
@@ -505,7 +497,7 @@ public class DatabaseManager
                     ResultSet rs = query.executeQuery();
                     while (rs.next())
                     {
-                        tmp.add("Start:"+ rs.getString("player")+", Time: " +rs.getString("start_time")+ " Item: " + rs.getString("item")+ " Winner: "+ rs.getString("winner")+" Price: " +rs.getString("price"));
+                        tmp.add("Start:" + rs.getString("player") + ", Time: " + rs.getString("start_time") + " Item: " + rs.getString("item") + " Winner: " + rs.getString("winner") + " Price: " + rs.getString("price"));
                     }
                     String[] w = new String[tmp.size()];
                     tmp.toArray(w);
@@ -563,14 +555,4 @@ public class DatabaseManager
         }
         return "";
     }
-
-    //TODO implement Insert Update Statements
-
-    /*
-    private void createStatementStrings()
-    {
-
-        addLOG = "INSERT INTO " + dbname + "." + ea_logs + " (`uuid_player`, `start_time`, `item`, `uuid_winner`, `price`) VALUES ('awdadawd', 'awdawd', '2020-08-22');";
-    }
-    */
 }

@@ -20,11 +20,9 @@ public class AuctionManager
     private Auction currentAuction = null;
 
     private int timerTask;
-
     private int timerEndAuctionTask;
 
-    private double remainingTimeLoop = 10;
-
+    private final double remainingTimeLoop = 10;
     private double timeLeft;
 
     public boolean enabled = true;
@@ -44,19 +42,18 @@ public class AuctionManager
         instance = this;
     }
 
-    public boolean startAuction(Player p, ItemStack item, int startPrice, int time)
+    public void startAuction(Player p, ItemStack item, int startPrice, int time)
     {
         currentAuction = new Auction(p, item, startPrice);
         sendMessage(LanguageManager.auctionStartText);
-        sendHoverMessage(LanguageManager.auctionStartItemText, item,false);
-        sendMessage(LanguageManager.auctionStartPriceText.replace("%startprice%",currentAuction.getStartPrice()+""));
+        sendHoverMessage(LanguageManager.auctionStartItemText, item, false);
+        sendMessage(LanguageManager.auctionStartPriceText.replace("%startprice%", currentAuction.getStartPrice() + ""));
         sendMessage(LanguageManager.auctionMinLeft.replace("%timeleft%", getTimeString(time)));
-        startEndAuctionTask(time,false);
-        startMessageTask(time,false);
-        return true;
+        startEndAuctionTask(time, false);
+        startMessageTask(time, false);
     }
 
-    private void startMessageTask(int time,boolean override)
+    private void startMessageTask(int time, boolean override)
     {
         timeLeft = time;
         if (override)
@@ -66,12 +63,12 @@ public class AuctionManager
         timerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(EasyAuction.getInstance(), () ->
         {
             timeLeft -= remainingTimeLoop;
-            sendHoverMessage(LanguageManager.auctionRunText,currentAuction.getAuctionItem(),true);
+            sendHoverMessage(LanguageManager.auctionRunText, currentAuction.getAuctionItem(), true);
             sendMessage(LanguageManager.auctionMinLeft.replace("%timeleft%", getTimeString(timeLeft)));
         }, (long) 10 * 20, (long) 10 * 20);
     }
 
-    private void startEndAuctionTask(int time,boolean override)
+    private void startEndAuctionTask(int time, boolean override)
     {
         if (override)
         {
@@ -100,7 +97,6 @@ public class AuctionManager
     private void auctionEndWithWinner()
     {
         CoolDownManager.getInstance().addPlayerHasCoolDown(currentAuction.getAuctionStartPlayer());
-        String ae = "";
         if (currentAuction.getBidPlayer().isOnline())
         {
             DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(), currentAuction.getAuctionItem().toString(), currentAuction.getBidPlayer().getDisplayName(), currentAuction.getPriceCurrent());
@@ -132,7 +128,7 @@ public class AuctionManager
     {
         if (currentAuction.getBidPlayer() != null && currentAuction.getBidPlayer().isOnline())
         {
-            Map<Integer, ItemStack> map = null;
+            Map<Integer, ItemStack> map;
             map = currentAuction.getBidPlayer().getInventory().addItem(currentAuction.getAuctionItem());
             if (map.size() == 1)
             {
@@ -143,14 +139,21 @@ public class AuctionManager
                 map.clear();
             }
 
-            EconomyManager.getInstance().removeMoney(currentAuction.getBidPlayer(), currentAuction.getPriceCurrent());
-            currentAuction.getBidPlayer().sendMessage(LanguageManager.moneyRemoved.replace("%money%", currentAuction.getPriceCurrent() + ""));
-            currentAuction.getBidPlayer().sendMessage(LanguageManager.itemGet.replace("%item%", currentAuction.getAuctionItem().getType() + ""));
+            if ( EconomyManager.getInstance().removeMoney(currentAuction.getBidPlayer(), currentAuction.getPriceCurrent()))
+            {
+                currentAuction.getBidPlayer().sendMessage(LanguageManager.moneyRemoved.replace("%money%", currentAuction.getPriceCurrent() + ""));
+                currentAuction.getBidPlayer().sendMessage(LanguageManager.itemGet.replace("%item%", currentAuction.getAuctionItem().getType() + ""));
 
-            EconomyManager.getInstance().addMoney(currentAuction.getAuctionStartPlayer(), currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()));
-            currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.moneyGet.replace("%money%", "" + (currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()))));
-            currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.itemRemoved.replace("%item%", currentAuction.getAuctionItem().getType() + ""));
-            return true;
+                EconomyManager.getInstance().addMoney(currentAuction.getAuctionStartPlayer(), currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()));
+                currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.moneyGet.replace("%money%", "" + (currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()))));
+                currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.itemRemoved.replace("%item%", currentAuction.getAuctionItem().getType() + ""));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
         else
         {
@@ -160,7 +163,7 @@ public class AuctionManager
 
     private void getAuctionStartItemBack()
     {
-        Map<Integer, ItemStack> map = null;
+        Map<Integer, ItemStack> map;
         map = currentAuction.getAuctionStartPlayer().getInventory().addItem(currentAuction.getAuctionItem());
         if (map.size() == 1)
         {
@@ -184,20 +187,20 @@ public class AuctionManager
         }
     }
 
-    private void sendHoverMessage(String msg, ItemStack item,boolean update)
+    private void sendHoverMessage(String msg, ItemStack item, boolean update)
     {
-        String itemtext = item.getAmount() +"x ";
+        String itemtext = item.getAmount() + "x ";
         if (!item.getItemMeta().getDisplayName().equals(""))
         {
-            itemtext +=  item.getItemMeta().getDisplayName();
+            itemtext += item.getItemMeta().getDisplayName();
         }
         else
         {
-            itemtext +=  item.getType();
+            itemtext += item.getType();
         }
         if (update)
         {
-           msg = msg.replace("%price%",currentAuction.getPriceCurrent()+"").replace("%bidplayer%",currentAuction.getBidPlayer() != null ? currentAuction.getBidPlayer().getName() : "---");
+            msg = msg.replace("%price%", currentAuction.getPriceCurrent() + "").replace("%bidplayer%", currentAuction.getBidPlayer() != null ? currentAuction.getBidPlayer().getName() : "---");
         }
         String[] parts = msg.split(" ");
         int split = 0;
@@ -221,13 +224,13 @@ public class AuctionManager
             {
                 TextComponent h = new TextComponent(tag.toString());
 
-                TextComponent messageh = new TextComponent("["+itemtext+"] ");
+                TextComponent messageh = new TextComponent("[" + itemtext + "] ");
                 messageh.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(h).create()));
                 text.addExtra(messageh);
             }
             else
             {
-                text.addExtra(parts[i]+ " ");
+                text.addExtra(parts[i] + " ");
             }
         }
 
@@ -242,7 +245,7 @@ public class AuctionManager
 
     public void stopAuction(boolean playerOff, Player p)
     {
-        Map<Integer, ItemStack> map = null;
+        Map<Integer, ItemStack> map;
         if (playerOff)
         {
             map = p.getInventory().addItem(currentAuction.getAuctionItem());
@@ -289,12 +292,12 @@ public class AuctionManager
         if (currentAuction != null && currentAuction.getPriceCurrent() < bid)
         {
             currentAuction.setBidPlayer(p, bid);
-            sendMessage(LanguageManager.playerBid.replace("%player%",currentAuction.getBidPlayer().getName()+"").replace("%price%",currentAuction.getPriceCurrent()+""));
+            sendMessage(LanguageManager.playerBid.replace("%player%", currentAuction.getBidPlayer().getName() + "").replace("%price%", currentAuction.getPriceCurrent() + ""));
             if (timeLeft == 10)
             {
-                startMessageTask(20,true);
-                startEndAuctionTask(20,true);
-                sendMessage(LanguageManager.timeincreasse.replace("%time%",timeLeft+""));
+                startMessageTask(20, true);
+                startEndAuctionTask(20, true);
+                sendMessage(LanguageManager.timeincreasse.replace("%time%", timeLeft + ""));
             }
             return true;
         }

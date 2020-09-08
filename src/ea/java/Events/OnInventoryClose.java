@@ -14,15 +14,11 @@ public class OnInventoryClose implements Listener
     @EventHandler
     public void onClose(final InventoryCloseEvent e)
     {
-        if (!e.getView().getTitle().contains("A:"))
+        if (e.getView().getTitle().contains("A:"))
         {
-            return;
-        }
-        else
-        {
-            if ( e.getInventory().getItem(28) != null && Objects.requireNonNull(e.getInventory().getItem(28)).getType()  != Material.AIR)
+            if (e.getInventory().getItem(28) != null && Objects.requireNonNull(e.getInventory().getItem(28)).getType() != Material.AIR)
             {
-                Map<Integer, ItemStack> map = null;
+                Map<Integer, ItemStack> map;
                 map = e.getPlayer().getInventory().addItem(e.getInventory().getItem(28));
                 if (map.size() == 1)
                 {

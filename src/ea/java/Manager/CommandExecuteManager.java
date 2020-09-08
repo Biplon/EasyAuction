@@ -4,12 +4,9 @@ import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
 import ea.java.EasyAuction;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
-import java.util.zip.DataFormatException;
 
 public class CommandExecuteManager
 {
@@ -99,9 +96,9 @@ public class CommandExecuteManager
         {
             if (AuctionManager.getInstance().getCurrentAuction().getPriceCurrent() + (AuctionManager.getInstance().getCurrentAuction().getStartPrice() * (EasyAuction.getInstance().getConfig().getInt("general.bidsteps") / 100)) < bid)
             {
-                if (EconomyManager.getInstance().canBid(player,bid))
+                if (EconomyManager.getInstance().canBid(player, bid))
                 {
-                    if ( AuctionManager.getInstance().playerBid(player,bid))
+                    if (AuctionManager.getInstance().playerBid(player, bid))
                     {
                         player.sendMessage(LanguageManager.youBid);
                     }
@@ -125,24 +122,21 @@ public class CommandExecuteManager
         {
             player.sendMessage(LanguageManager.noAuctionRunning);
         }
-
-
-        //TODO implement
     }
 
     public void salesAuctionCommandExecute(Player player)
     {
-        player.sendMessage(LanguageManager.salesPlayerText.replace("%money%",DatabaseManager.getInstance().getPlayerSales(player)));
+        player.sendMessage(LanguageManager.salesPlayerText.replace("%money%", DatabaseManager.getInstance().getPlayerSales(player)));
     }
 
     //admin
 
     public void getPlayerStats(Player p, String name, boolean win)
     {
-        String[] result = DatabaseManager.getInstance().getPlayerStats(name,win);
-        for (int i = 0; i < result.length; i++)
+        String[] result = DatabaseManager.getInstance().getPlayerStats(name, win);
+        for (String s : result)
         {
-            p.sendMessage(result[i]);
+            p.sendMessage(s);
         }
     }
 
@@ -168,13 +162,12 @@ public class CommandExecuteManager
         if (Bukkit.getPlayer(playerName) != null)
         {
             OfflinePlayer p = Bukkit.getOfflinePlayer(playerName);
-            DatabaseManager.getInstance().banPlayer(p.getUniqueId(),time);
+            DatabaseManager.getInstance().banPlayer(p.getUniqueId(), time);
         }
         else
         {
-            DatabaseManager.getInstance().banPlayer(Bukkit.getPlayer(playerName).getUniqueId(),time);
+            DatabaseManager.getInstance().banPlayer(Bukkit.getPlayer(playerName).getUniqueId(), time);
         }
-
     }
 
     public void pardonPlayer(String playerName)
@@ -193,9 +186,8 @@ public class CommandExecuteManager
     public void reload()
     {
         ConfigManager.loadConfig();
+        LanguageManager.loadLang();
         CoolDownManager.getInstance().loadCoolDownGroups();
         BlackList.getInstance().loadBlackList();
     }
-
-
 }

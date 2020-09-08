@@ -32,7 +32,7 @@ public class CommandAEPlayer implements CommandExecutor
             }
             else if (args[0].equals(LanguageManager.bidCommandAlias) && args.length == 2)
             {
-                CommandExecuteManager.getInstance().playerBid(player,Integer.parseInt(args[1]));
+                CommandExecuteManager.getInstance().playerBid(player, Integer.parseInt(args[1]));
             }
             else if (args[0].equals(LanguageManager.showCommandAlias))
             {

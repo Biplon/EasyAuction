@@ -63,7 +63,6 @@ public class EasyAuction extends JavaPlugin
 
     private void regEvents()
     {
-        //TODO implement events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new OnPlayerLogin(), this);
         pm.registerEvents(new OnPlayerLeave(), this);

@@ -72,7 +72,6 @@ public class CommandAEAdmin implements CommandExecutor
         {
             CommandExecuteManager.getInstance().enThisAuction(true, false);
         }
-
         return false;
     }
 }
