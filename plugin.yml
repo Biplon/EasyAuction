@@ -1,7 +1,7 @@
 name: EasyAuction
 author: Vestri
 description: EasyAuction
-version: 0.8
+version: 0.10
 api-version: 1.15
 main: ea.java.EasyAuction
 depend: [Vault]
@@ -21,6 +21,9 @@ commands:
     description: bid
     usage: /bid <sum>
     aliases: [bieten]
+  details:
+    description: details
+    usage: /details
   auctionadmin:
     description: auctionadmin
     usage: /auctionadmin

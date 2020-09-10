@@ -1,5 +1,6 @@
 package ea.java.Events;
 
+import ea.java.Config.LanguageManager;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ public class OnInventoryClose implements Listener
     @EventHandler
     public void onClose(final InventoryCloseEvent e)
     {
-        if (e.getView().getTitle().contains("A:"))
+        if (e.getView().getTitle().contains("A:"+ LanguageManager.createAuctionGui))
         {
             if (e.getInventory().getItem(28) != null && Objects.requireNonNull(e.getInventory().getItem(28)).getType() != Material.AIR)
             {

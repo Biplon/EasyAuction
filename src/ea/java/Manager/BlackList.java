@@ -1,6 +1,7 @@
 package ea.java.Manager;
 
 import ea.java.EasyAuction;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -50,16 +51,12 @@ public class BlackList
             String lore = currentItem.getItemMeta().getLore().get(0);
             for (String s : blacklistlore)
             {
-                if (s.contains(lore))
+                if (lore.contains(s))
                 {
-                    return true;
+                    return false;
                 }
             }
-            return false;
         }
-        else
-        {
-            return true;
-        }
+        return true;
     }
 }

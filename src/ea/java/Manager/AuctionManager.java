@@ -110,9 +110,12 @@ public class AuctionManager
         }
         else
         {
+
             sendMessage(LanguageManager.auctionEndWinnerOff);
-            CommandExecuteManager.getInstance().banPlayer(currentAuction.getBidPlayer().getName(), EasyAuction.getInstance().getConfig().getInt("general.bantime"));
+            DatabaseManager.getInstance().banPlayer(currentAuction.getBidPlayer().getUniqueId(), EasyAuction.getInstance().getConfig().getInt("general.bantime"));
             DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(), currentAuction.getAuctionItem().toString(), "---", 0);
+            getAuctionStartItemBack();
+
         }
     }
 
@@ -142,11 +145,20 @@ public class AuctionManager
             if ( EconomyManager.getInstance().removeMoney(currentAuction.getBidPlayer(), currentAuction.getPriceCurrent()))
             {
                 currentAuction.getBidPlayer().sendMessage(LanguageManager.moneyRemoved.replace("%money%", currentAuction.getPriceCurrent() + ""));
-                currentAuction.getBidPlayer().sendMessage(LanguageManager.itemGet.replace("%item%", currentAuction.getAuctionItem().getType() + ""));
+                String itemtext = currentAuction.getAuctionItem().getAmount() + "x ";
+                if (!currentAuction.getAuctionItem().getItemMeta().getDisplayName().equals(""))
+                {
+                    itemtext += currentAuction.getAuctionItem().getItemMeta().getDisplayName();
+                }
+                else
+                {
+                    itemtext += currentAuction.getAuctionItem().getType();
+                }
+                currentAuction.getBidPlayer().sendMessage(LanguageManager.itemGet.replace("%item%", itemtext));
 
                 EconomyManager.getInstance().addMoney(currentAuction.getAuctionStartPlayer(), currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()));
                 currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.moneyGet.replace("%money%", "" + (currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()))));
-                currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.itemRemoved.replace("%item%", currentAuction.getAuctionItem().getType() + ""));
+                currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.itemRemoved.replace("%item%", itemtext));
                 return true;
             }
             else
@@ -225,6 +237,7 @@ public class AuctionManager
                 TextComponent h = new TextComponent(tag.toString());
 
                 TextComponent messageh = new TextComponent("[" + itemtext + "] ");
+                messageh.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/details"));
                 messageh.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(h).create()));
                 text.addExtra(messageh);
             }

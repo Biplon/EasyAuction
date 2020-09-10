@@ -3,6 +3,7 @@ package ea.java;
 import ea.java.Command.CommandAEAdmin;
 import ea.java.Command.CommandAEPlayer;
 import ea.java.Command.CommandAEPlayerBid;
+import ea.java.Command.CommandAEPlayerDetails;
 import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
@@ -49,6 +50,7 @@ public class EasyAuction extends JavaPlugin
     {
         Objects.requireNonNull(this.getCommand("auction")).setExecutor(new CommandAEPlayer());
         Objects.requireNonNull(this.getCommand("bid")).setExecutor(new CommandAEPlayerBid());
+        Objects.requireNonNull(this.getCommand("details")).setExecutor(new CommandAEPlayerDetails());
         Objects.requireNonNull(this.getCommand("auctionadmin")).setExecutor(new CommandAEAdmin());
         List<String> alias = new ArrayList<>();
         alias.add(LanguageManager.auctionCommandAlias);

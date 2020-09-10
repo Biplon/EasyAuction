@@ -25,21 +25,22 @@ public class CommandExecuteManager
 
     public void showCommandsCommandExecute(Player p)
     {
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.newCommandAlias);
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.bidCommandAlias);
-        p.sendMessage("/" + LanguageManager.bidCommandAliasShort);
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.salesCommandAlias);
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.showCommandAlias);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.newCommandAlias+ LanguageManager.dnewCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.bidCommandAlias+ LanguageManager.dbidCommand);
+        p.sendMessage("/" + LanguageManager.bidCommandAliasShort+ LanguageManager.dbidCommand);
+        p.sendMessage("/" + LanguageManager.ddetailsCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.salesCommandAlias+ LanguageManager.dsalesCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.showCommandAlias+ LanguageManager.dshowCommand);
     }
 
     public void showCommandsAdminCommandExecute(Player p)
     {
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.startCommandAlias + "|" + LanguageManager.winCommandAlias);
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.enableCommandAlias + "|" + LanguageManager.disableCommandAlias);
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.stopCommandAlias);
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.banCommandAlias + " playername " + "time");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.pardonCommandAlias + " playername");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.reloadCommandAlias);
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.startCommandAlias + " | " + LanguageManager.winCommandAlias +" §7show player win auction");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.enableCommandAlias + " | " + LanguageManager.disableCommandAlias+" §7show player start auction");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.stopCommandAlias +" §7stop running auction");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.banCommandAlias + " playername " + "time" +" §7ban player for x min");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.pardonCommandAlias + " playername" +" §7remove player ban");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.reloadCommandAlias + " §7reload config and lang file");
     }
 
     public void openNewAuctionGUI(Player p)
@@ -90,33 +91,53 @@ public class CommandExecuteManager
         }
     }
 
+
+    public void showItemDetails(Player player)
+    {
+        if (AuctionManager.getInstance().getCurrentAuction() != null)
+        {
+            GUIManager.getInstance().showItemGUI(player,AuctionManager.getInstance().getCurrentAuction().getAuctionItem());
+        }
+        else
+        {
+            player.sendMessage(LanguageManager.noAuctionRunning);
+        }
+
+    }
+
     public void playerBid(Player player, int bid)
     {
         if (AuctionManager.getInstance().getCurrentAuction() != null)
         {
-            if (AuctionManager.getInstance().getCurrentAuction().getPriceCurrent() + (AuctionManager.getInstance().getCurrentAuction().getStartPrice() * (EasyAuction.getInstance().getConfig().getInt("general.bidsteps") / 100)) < bid)
+            if (player != AuctionManager.getInstance().getCurrentAuction().getAuctionStartPlayer() && player != AuctionManager.getInstance().getCurrentAuction().getBidPlayer())
             {
-                if (EconomyManager.getInstance().canBid(player, bid))
+                if (AuctionManager.getInstance().getCurrentAuction().getPriceCurrent() + (AuctionManager.getInstance().getCurrentAuction().getStartPrice() * (EasyAuction.getInstance().getConfig().getInt("general.bidsteps") / 100)) < bid)
                 {
-                    if (AuctionManager.getInstance().playerBid(player, bid))
+                    if (EconomyManager.getInstance().canBid(player, bid))
                     {
-                        player.sendMessage(LanguageManager.youBid);
+                        if (AuctionManager.getInstance().playerBid(player, bid))
+                        {
+                            player.sendMessage(LanguageManager.youBid);
+                        }
+                        else
+                        {
+                            player.sendMessage(LanguageManager.goWrong);
+                        }
                     }
                     else
                     {
-                        player.sendMessage(LanguageManager.goWrong);
+                        player.sendMessage(LanguageManager.notEnoughMoney);
                     }
                 }
                 else
                 {
-                    player.sendMessage(LanguageManager.notEnoughMoney);
+                    player.sendMessage(LanguageManager.bidToLow);
                 }
             }
             else
             {
-                player.sendMessage(LanguageManager.bidToLow);
+                player.sendMessage(LanguageManager.nobidOnOwn);
             }
-
         }
         else
         {

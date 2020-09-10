@@ -25,6 +25,7 @@ public class LanguageManager
     public static String auctionDisabled;
     public static String salesPlayerText;
     public static String noAuctionRunning;
+    public static String nobidOnOwn;
 
     //GUI text
     public static String createAuctionGui;
@@ -74,6 +75,13 @@ public class LanguageManager
     public static String auctionStartPriceText;
     public static String timeincreasse;
 
+    public static String ddetailsCommand;
+    public static String dnewCommand;
+    public static String dbidCommand;
+    public static String dsalesCommand;
+    public static String dshowCommand;
+
+
     public static void loadLang()
     {
         File configFile = new File("plugins" + File.separator + EasyAuction.getInstance().getName() + File.separator + EasyAuction.getInstance().getConfig().getString("general.lang") + ".yml");
@@ -104,7 +112,14 @@ public class LanguageManager
         itemGet = cfg.getString("itemGet") != null ? cfg.getString("itemGet") : "Auction end. You got: %item%.";
         moneyRemoved = cfg.getString("moneyRemoved") != null ? cfg.getString("moneyRemoved") : "Auction end. You paid: %money%.";
         itemRemoved = cfg.getString("itemRemoved") != null ? cfg.getString("itemRemoved") : "Auction end. Item removed: %item%.";
+        nobidOnOwn = cfg.getString("nobidOnOwn") != null ? cfg.getString("nobidOnOwn") : "You can not bid.";
 
+
+        ddetailsCommand = cfg.getString("ddetailsCommand") != null ? cfg.getString("ddetailsCommand") : "show item in auction";
+        dnewCommand = cfg.getString("dnewCommand") != null ? cfg.getString("dnewCommand") : "create new auction";
+        dbidCommand = cfg.getString("dbidCommand") != null ? cfg.getString("dbidCommand") : "bid on running auction";
+        dsalesCommand = cfg.getString("dsalesCommand") != null ? cfg.getString("dsalesCommand") : "show your sales value";
+        dshowCommand = cfg.getString("dshowCommand") != null ? cfg.getString("dshowCommand") : "enable/disable auctions notifications";
         //GUI text
         createAuctionGui = cfg.getString("createAuctionGui") != null ? cfg.getString("createAuctionGui") : "New Auction";
         timeplus = cfg.getString("timeplus") != null ? cfg.getString("timeplus") : "Increase auction time";

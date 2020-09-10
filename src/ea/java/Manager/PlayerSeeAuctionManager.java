@@ -2,7 +2,10 @@ package ea.java.Manager;
 
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class PlayerSeeAuctionManager
         playerSeeAuction.remove(p);
         DatabaseManager.getInstance().disablePlayerSeeAuction(p.getUniqueId());
         p.sendMessage(LanguageManager.showCommandOutput + "false");
+        ItemStack i = new ItemStack(Material.DIAMOND_SWORD,3);
     }
 
     public static boolean playerSeeAuctions(Player p)

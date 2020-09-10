@@ -29,6 +29,17 @@ public class GUIManager
         instance = this;
     }
 
+    public void showItemGUI(Player p,ItemStack item)
+    {
+        Inventory inv = Bukkit.createInventory(null, 45, "A:Item");
+        for (int i = 0; i < 45; i++)
+        {
+            inv.setItem(i, defaultGuiItem);
+        }
+        inv.setItem(22,item);
+        p.openInventory(inv);
+    }
+
     public void changeItemValue(EGUIChange change, int value, Inventory inv)
     {
         switch (change)
