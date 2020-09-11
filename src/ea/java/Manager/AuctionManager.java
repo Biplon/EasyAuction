@@ -1,5 +1,6 @@
 package ea.java.Manager;
 
+import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
 import ea.java.EasyAuction;
@@ -112,7 +113,7 @@ public class AuctionManager
         {
 
             sendMessage(LanguageManager.auctionEndWinnerOff);
-            DatabaseManager.getInstance().banPlayer(currentAuction.getBidPlayer().getUniqueId(), EasyAuction.getInstance().getConfig().getInt("general.bantime"));
+            DatabaseManager.getInstance().banPlayer(currentAuction.getBidPlayer().getUniqueId(), ConfigManager.banTime);
             DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(), currentAuction.getAuctionItem().toString(), "---", 0);
             getAuctionStartItemBack();
 
@@ -156,8 +157,8 @@ public class AuctionManager
                 }
                 currentAuction.getBidPlayer().sendMessage(LanguageManager.itemGet.replace("%item%", itemtext));
 
-                EconomyManager.getInstance().addMoney(currentAuction.getAuctionStartPlayer(), currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()));
-                currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.moneyGet.replace("%money%", "" + (currentAuction.getPriceCurrent() - ((((double) EasyAuction.getInstance().getConfig().getInt("general.fee")) / 100) * currentAuction.getPriceCurrent()))));
+                EconomyManager.getInstance().addMoney(currentAuction.getAuctionStartPlayer(), currentAuction.getPriceCurrent() - (((double) ConfigManager.fee / 100) * currentAuction.getPriceCurrent()));
+                currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.moneyGet.replace("%money%", "" + (currentAuction.getPriceCurrent() - ((((double) ConfigManager.fee) / 100) * currentAuction.getPriceCurrent()))));
                 currentAuction.getAuctionStartPlayer().sendMessage(LanguageManager.itemRemoved.replace("%item%", itemtext));
                 return true;
             }
@@ -270,7 +271,7 @@ public class AuctionManager
                 }
                 map.clear();
             }
-            CommandExecuteManager.getInstance().banPlayer(p.getName(), EasyAuction.getInstance().getConfig().getInt("general.bantime"));
+            CommandExecuteManager.getInstance().banPlayer(p.getName(), ConfigManager.banTime);
         }
         else
         {

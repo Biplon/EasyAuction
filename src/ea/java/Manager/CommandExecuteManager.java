@@ -25,21 +25,21 @@ public class CommandExecuteManager
 
     public void showCommandsCommandExecute(Player p)
     {
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.newCommandAlias+ LanguageManager.dnewCommand);
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.bidCommandAlias+ LanguageManager.dbidCommand);
-        p.sendMessage("/" + LanguageManager.bidCommandAliasShort+ LanguageManager.dbidCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.newCommandAlias + LanguageManager.dnewCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.bidCommandAlias + LanguageManager.dbidCommand);
+        p.sendMessage("/" + LanguageManager.bidCommandAliasShort + LanguageManager.dbidCommand);
         p.sendMessage("/" + LanguageManager.ddetailsCommand);
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.salesCommandAlias+ LanguageManager.dsalesCommand);
-        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.showCommandAlias+ LanguageManager.dshowCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.salesCommandAlias + LanguageManager.dsalesCommand);
+        p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.showCommandAlias + LanguageManager.dshowCommand);
     }
 
     public void showCommandsAdminCommandExecute(Player p)
     {
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.startCommandAlias + " | " + LanguageManager.winCommandAlias +" §7show player win auction");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.enableCommandAlias + " | " + LanguageManager.disableCommandAlias+" §7show player start auction");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.stopCommandAlias +" §7stop running auction");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.banCommandAlias + " playername " + "time" +" §7ban player for x min");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.pardonCommandAlias + " playername" +" §7remove player ban");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.startCommandAlias + " | <" + LanguageManager.winCommandAlias + "> §7show player win auction");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.enableCommandAlias + " | <" + LanguageManager.disableCommandAlias + "> [force] §7show player start auction (force stop running auction)");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.stopCommandAlias + " §7stop running auction");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.banCommandAlias + " <playername> " + "<time>" + " §7ban player for x min");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.pardonCommandAlias + " <playername>" + " §7remove player ban");
         p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.reloadCommandAlias + " §7reload config and lang file");
     }
 
@@ -53,13 +53,13 @@ public class CommandExecuteManager
                 {
                     if (!DatabaseManager.getInstance().playerBanned(p))
                     {
-                        if (!CoolDownManager.getInstance().hasPlayerCoolDown(p.getUniqueId()))
+                        if (!CoolDownManager.getInstance().hasPlayerCoolDown(p))
                         {
                             GUIManager.getInstance().openGUI(p);
                         }
                         else
                         {
-                            p.sendMessage(LanguageManager.coolDownText);
+                            p.sendMessage(LanguageManager.coolDownText + CoolDownManager.getInstance().getPlayerCoolDownTime(p));
                         }
                     }
                     else
@@ -96,7 +96,7 @@ public class CommandExecuteManager
     {
         if (AuctionManager.getInstance().getCurrentAuction() != null)
         {
-            GUIManager.getInstance().showItemGUI(player,AuctionManager.getInstance().getCurrentAuction().getAuctionItem());
+            GUIManager.getInstance().showItemGUI(player, AuctionManager.getInstance().getCurrentAuction().getAuctionItem());
         }
         else
         {
@@ -111,7 +111,7 @@ public class CommandExecuteManager
         {
             if (player != AuctionManager.getInstance().getCurrentAuction().getAuctionStartPlayer() && player != AuctionManager.getInstance().getCurrentAuction().getBidPlayer())
             {
-                if (AuctionManager.getInstance().getCurrentAuction().getPriceCurrent() + (AuctionManager.getInstance().getCurrentAuction().getStartPrice() * (EasyAuction.getInstance().getConfig().getInt("general.bidsteps") / 100)) < bid)
+                if (AuctionManager.getInstance().getCurrentAuction().getPriceCurrent() + (AuctionManager.getInstance().getCurrentAuction().getStartPrice() * (ConfigManager.bidStep / 100)) < bid)
                 {
                     if (EconomyManager.getInstance().canBid(player, bid))
                     {
@@ -147,21 +147,24 @@ public class CommandExecuteManager
 
     public void salesAuctionCommandExecute(Player player)
     {
-        player.sendMessage(LanguageManager.salesPlayerText.replace("%money%", DatabaseManager.getInstance().getPlayerSales(player)));
+        Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () -> player.sendMessage(LanguageManager.salesPlayerText.replace("%money%", DatabaseManager.getInstance().getPlayerSales(player))));
     }
 
     //admin
 
     public void getPlayerStats(Player p, String name, boolean win)
     {
-        String[] result = DatabaseManager.getInstance().getPlayerStats(name, win);
-        for (String s : result)
+        Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
         {
-            p.sendMessage(s);
-        }
+            String[] result = DatabaseManager.getInstance().getPlayerStats(name, win);
+            for (String s : result)
+            {
+                p.sendMessage(s);
+            }
+        });
     }
 
-    public void enThisAuction(boolean active, boolean force)
+    public void endThisAuction(boolean active, boolean force)
     {
         AuctionManager.getInstance().enabled = active;
         if (force && AuctionManager.getInstance().getCurrentAuction() != null)
@@ -180,28 +183,34 @@ public class CommandExecuteManager
 
     public void banPlayer(String playerName, int time)
     {
-        if (Bukkit.getPlayer(playerName) != null)
+        Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
         {
-            OfflinePlayer p = Bukkit.getOfflinePlayer(playerName);
-            DatabaseManager.getInstance().banPlayer(p.getUniqueId(), time);
-        }
-        else
-        {
-            DatabaseManager.getInstance().banPlayer(Bukkit.getPlayer(playerName).getUniqueId(), time);
-        }
+            if (Bukkit.getPlayer(playerName) != null)
+            {
+                OfflinePlayer p = Bukkit.getOfflinePlayer(playerName);
+                DatabaseManager.getInstance().banPlayer(p.getUniqueId(), time);
+            }
+            else
+            {
+                DatabaseManager.getInstance().banPlayer(Bukkit.getPlayer(playerName).getUniqueId(), time);
+            }
+        });
     }
 
     public void pardonPlayer(String playerName)
     {
-        if (Bukkit.getPlayer(playerName) != null)
+        Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
         {
-            OfflinePlayer p = Bukkit.getOfflinePlayer(playerName);
-            DatabaseManager.getInstance().pardonPlayer(p.getUniqueId());
-        }
-        else
-        {
-            DatabaseManager.getInstance().pardonPlayer(Bukkit.getPlayer(playerName).getUniqueId());
-        }
+            if (Bukkit.getPlayer(playerName) != null)
+            {
+                OfflinePlayer p = Bukkit.getOfflinePlayer(playerName);
+                DatabaseManager.getInstance().pardonPlayer(p.getUniqueId());
+            }
+            else
+            {
+                DatabaseManager.getInstance().pardonPlayer(Bukkit.getPlayer(playerName).getUniqueId());
+            }
+        });
     }
 
     public void reload()

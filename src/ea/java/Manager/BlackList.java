@@ -1,7 +1,6 @@
 package ea.java.Manager;
 
 import ea.java.EasyAuction;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class BlackList
         return instance;
     }
 
-    private final List<String> blacklistlore = new ArrayList<>();
+    private final List<String> blackListLore = new ArrayList<>();
 
     public BlackList()
     {
@@ -27,14 +26,14 @@ public class BlackList
 
     public void loadBlackList()
     {
-        blacklistlore.clear();
+        blackListLore.clear();
         boolean blackListFound = true;
         int count = 0;
         while (blackListFound)
         {
             if (EasyAuction.getInstance().getConfig().getString("general.blacklist." + count + ".lore") != null)
             {
-                blacklistlore.add(EasyAuction.getInstance().getConfig().getString("general.blacklist." + count + ".lore"));
+                blackListLore.add(EasyAuction.getInstance().getConfig().getString("general.blacklist." + count + ".lore"));
                 count++;
             }
             else
@@ -49,7 +48,7 @@ public class BlackList
         if (Objects.requireNonNull(currentItem.getItemMeta()).hasLore())
         {
             String lore = currentItem.getItemMeta().getLore().get(0);
-            for (String s : blacklistlore)
+            for (String s : blackListLore)
             {
                 if (lore.contains(s))
                 {

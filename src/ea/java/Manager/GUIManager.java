@@ -1,5 +1,6 @@
 package ea.java.Manager;
 
+import ea.java.Config.ConfigManager;
 import ea.java.Config.LanguageManager;
 import ea.java.EasyAuction;
 import ea.java.Enum.EGUIChange;
@@ -46,13 +47,13 @@ public class GUIManager
         {
             case Time:
                 int time = Integer.parseInt(inv.getItem(22).getItemMeta().getLore().get(0)) + value;
-                if (time < EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMin"))
+                if (time < ConfigManager.auctionMinTime)
                 {
-                    time = EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMin");
+                    time =  ConfigManager.auctionMinTime;
                 }
-                else if (time > EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMax"))
+                else if (time >  ConfigManager.auctionMaxTime)
                 {
-                    time = EasyAuction.getInstance().getConfig().getInt("general.auctiontimeMax");
+                    time = ConfigManager.auctionMaxTime;
                 }
                 inv.setItem(22, createGuiItem(Material.PAPER, LanguageManager.timecur, "" + time));
                 break;

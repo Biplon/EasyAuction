@@ -1,5 +1,7 @@
 package ea.java.Manager;
 
+import ea.java.Config.ConfigManager;
+import ea.java.Database.DatabaseManager;
 import ea.java.EasyAuction;
 import ea.java.Struct.CoolDownGroup;
 import org.bukkit.Bukkit;
@@ -11,8 +13,6 @@ import java.util.UUID;
 
 public class CoolDownManager
 {
-    private final List<UUID> hasCoolDown = new ArrayList<>();
-
     private final List<CoolDownGroup> cdGroups = new ArrayList<>();
 
     private static CoolDownManager instance;
@@ -47,21 +47,20 @@ public class CoolDownManager
         }
     }
 
-    public boolean hasPlayerCoolDown(UUID id)
+    public boolean hasPlayerCoolDown(Player p)
     {
-        return hasCoolDown.contains(id);
+        return DatabaseManager.getInstance().playerCoolDown(p);
     }
 
     public void addPlayerHasCoolDown(Player p)
     {
-        hasCoolDown.add(p.getUniqueId());
         UUID id = p.getUniqueId();
-        Bukkit.getScheduler().runTaskLaterAsynchronously(EasyAuction.getInstance(), () -> removePlayerCoolDown(id), getPlayerCoolDown(p) * 60 * 20);
+        Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () -> DatabaseManager.getInstance().setCoolDownPlayer(id,getPlayerCoolDown(p) ));
     }
 
-    public void removePlayerCoolDown(UUID id)
+    public String getPlayerCoolDownTime(Player p)
     {
-        hasCoolDown.remove(id);
+        return DatabaseManager.getInstance().getPlayerCoolDownTime(p);
     }
 
     private int getPlayerCoolDown(Player p)
@@ -73,6 +72,6 @@ public class CoolDownManager
                 return cdg.getCoolDown();
             }
         }
-        return EasyAuction.getInstance().getConfig().getInt("general.timerauction");
+        return ConfigManager.defaultAuctionCoolDown;
     }
 }

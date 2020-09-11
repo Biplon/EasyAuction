@@ -213,7 +213,7 @@ public class DatabaseManager
                     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss ");
                     String date = sdf.format(dt);
                     data = "Insert into " + dbname + "." + ea_player_see_auction + " (uuid_player,see_auction) values('" + id + "','0'); ";
-                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player,end_time) values('" + id + "','" + date + "'); ";
+                    data += "Insert into " + dbname + "." + ea_player_ban_auction + " (uuid_player,end_time,end_time_cooldown) values('" + id + "','" + date + "','" + date + "'); ";
                     query = connection.prepareStatement(data);
                     query.addBatch();
                     query.executeBatch();
@@ -554,5 +554,125 @@ public class DatabaseManager
             throwable.printStackTrace();
         }
         return "";
+    }
+
+
+    public boolean playerCoolDown(Player p)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "SELECT end_time_cooldown FROM " + dbname + "." + ea_player_ban_auction + " where uuid_player='" + p.getUniqueId() + "' ; ";
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    if (rs.next())
+                    {
+                        if (rs.getString("end_time_cooldown") != null)
+                        {
+                            Date dt = new Date();
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date date = formatter.parse(rs.getString("end_time_cooldown"));
+                            return date.after(dt);
+                        }
+                        return false;
+                    }
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                    return false;
+                }
+                catch (ParseException e)
+                {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            return false;
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+        return false;
+    }
+
+    public String getPlayerCoolDownTime(Player p)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    data = "SELECT end_time_cooldown FROM " + dbname + "." + ea_player_ban_auction + " where uuid_player='" + p.getUniqueId() + "' ; ";
+
+                    query = connection.prepareStatement(data);
+
+                    ResultSet rs = query.executeQuery();
+                    if (rs.next())
+                    {
+                        return rs.getString("end_time_cooldown");
+                    }
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                    return "";
+                }
+            }
+            return "";
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
+        return "";
+    }
+
+    public void setCoolDownPlayer(UUID id, int time)
+    {
+        try
+        {
+            if (connection != null && !connection.isClosed())
+            {
+                String data = "";
+                PreparedStatement query;
+                try
+                {
+                    int hours = time / 60;
+                    int minutes = time % 60;
+                    LocalDateTime actualDateTime = LocalDateTime.now();
+                    data = "UPDATE " + dbname + "." + ea_player_ban_auction + " SET `end_time_cooldown` = '" + actualDateTime.plusHours(hours).plusMinutes(minutes) + "' WHERE (`uuid_player` = '" + id + "');";
+
+                    query = connection.prepareStatement(data);
+
+                    query.execute();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                    EasyAuction.getInstance().getLogger().severe("Error: " + e.getMessage());
+                    EasyAuction.getInstance().getLogger().severe(data);
+                }
+            }
+        }
+        catch (SQLException throwable)
+        {
+            throwable.printStackTrace();
+        }
     }
 }

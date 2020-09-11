@@ -34,12 +34,12 @@ public class CommandAEAdmin implements CommandExecutor
             }
             else if (args[0].equals(LanguageManager.enableCommandAlias))
             {
-                CommandExecuteManager.getInstance().enThisAuction(true, false);
+                CommandExecuteManager.getInstance().endThisAuction(true, false);
                 player.sendMessage("enabled");
             }
             else if (args[0].equals(LanguageManager.disableCommandAlias))
             {
-                CommandExecuteManager.getInstance().enThisAuction(false, args.length == 2);
+                CommandExecuteManager.getInstance().endThisAuction(false, args.length == 2);
                 player.sendMessage("disabled");
             }
             else if (args[0].equals(LanguageManager.stopCommandAlias))
@@ -66,11 +66,11 @@ public class CommandAEAdmin implements CommandExecutor
         }
         if (args[0].equals(LanguageManager.disableCommandAlias))
         {
-            CommandExecuteManager.getInstance().enThisAuction(false, args.length == 2);
+            CommandExecuteManager.getInstance().endThisAuction(false, args.length == 2);
         }
         else if (args[0].equals(LanguageManager.enableCommandAlias))
         {
-            CommandExecuteManager.getInstance().enThisAuction(true, false);
+            CommandExecuteManager.getInstance().endThisAuction(true, false);
         }
         return false;
     }

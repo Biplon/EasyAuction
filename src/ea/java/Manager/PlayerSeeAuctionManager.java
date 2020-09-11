@@ -3,7 +3,6 @@ package ea.java.Manager;
 import ea.java.Config.LanguageManager;
 import ea.java.Database.DatabaseManager;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
