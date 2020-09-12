@@ -15,19 +15,24 @@ import java.util.UUID;
 
 public class DatabaseManager
 {
-    static DatabaseManager instance;
-    static Connection connection;
+    //DatabaseManager instance
+    private static DatabaseManager instance;
+    //Database connection
+    private static Connection connection;
 
-    static String dbname;
-    static String ea_logs;
-    static String ea_player_see_auction;
-    static String ea_player_ban_auction;
+    //Database name and table names
+    private static String dbname;
+    private static String ea_logs;
+    private static String ea_player_see_auction;
+    private static String ea_player_ban_auction;
 
+    //getter DatabaseManager instance
     public static DatabaseManager getInstance()
     {
         return instance;
     }
 
+    //constructor load config values create connection and setup tables
     public DatabaseManager()
     {
         instance = this;
@@ -80,6 +85,7 @@ public class DatabaseManager
         }
     }
 
+    //load Database name and table names
     private void loadConfigValues()
     {
         dbname = EasyAuction.getInstance().getConfig().getString("database.mysql.databaseName");
@@ -88,6 +94,7 @@ public class DatabaseManager
         ea_player_ban_auction = EasyAuction.getInstance().getConfig().getString("database.mysql.tableNameAuctionBanPlayer");
     }
 
+    //setup database tables
     private void setupTables()
     {
         try
@@ -158,6 +165,7 @@ public class DatabaseManager
         }
     }
 
+    //look in the db if player can see auction
     public boolean playerSeeAuction(UUID id)
     {
         try
@@ -199,6 +207,7 @@ public class DatabaseManager
         return false;
     }
 
+    //create player in db for auction
     private void createPlayer(UUID id)
     {
         try
@@ -232,6 +241,7 @@ public class DatabaseManager
         }
     }
 
+    //create log from last auction
     public void createLog(String player, String item, String winner, int price)
     {
         try
@@ -264,6 +274,7 @@ public class DatabaseManager
         }
     }
 
+    //set player can not see auction in db
     public void disablePlayerSeeAuction(UUID id)
     {
         try
@@ -294,6 +305,7 @@ public class DatabaseManager
         }
     }
 
+    //set player can see auction in db
     public void enablePlayerSeeAuction(UUID id)
     {
         try
@@ -324,6 +336,7 @@ public class DatabaseManager
         }
     }
 
+    //ban player from auction for x min
     public void banPlayer(UUID id, int time)
     {
         try
@@ -357,6 +370,7 @@ public class DatabaseManager
         }
     }
 
+    //pardon player from auction
     public void pardonPlayer(UUID id)
     {
         try
@@ -388,6 +402,7 @@ public class DatabaseManager
         }
     }
 
+    //check if player ban from auction
     public boolean playerBanned(Player p)
     {
         try
@@ -437,6 +452,7 @@ public class DatabaseManager
         return false;
     }
 
+    //get the complete sales from player
     public CharSequence getPlayerSales(Player p)
     {
         try
@@ -472,6 +488,7 @@ public class DatabaseManager
         return "0";
     }
 
+    //get the start/win auction from specific player
     public String[] getPlayerStats(String name, boolean win)
     {
         try
@@ -519,6 +536,7 @@ public class DatabaseManager
         return new String[0];
     }
 
+    //get the end Date from players ban
     public String getPlayerBannedTime(Player p)
     {
         try
@@ -556,7 +574,7 @@ public class DatabaseManager
         return "";
     }
 
-
+    //check if player have cooldown from auction
     public boolean playerCoolDown(Player p)
     {
         try
@@ -606,6 +624,7 @@ public class DatabaseManager
         return false;
     }
 
+    //get the end Date from players cooldown
     public String getPlayerCoolDownTime(Player p)
     {
         try
@@ -643,6 +662,7 @@ public class DatabaseManager
         return "";
     }
 
+    //set players cooldown
     public void setCoolDownPlayer(UUID id, int time)
     {
         try

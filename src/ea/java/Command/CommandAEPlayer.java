@@ -15,11 +15,13 @@ public class CommandAEPlayer implements CommandExecutor
         //check is player and have perms
         if (commandSender instanceof Player)
         {
+            //get Player and check perms
             Player player = (Player) commandSender;
             if (!player.hasPermission("ea.player"))
             {
                 return false;
             }
+            //check args and send it to CommandExecuteManager
             if (args.length == 0)
             {
                 CommandExecuteManager.getInstance().showCommandsCommandExecute(player);

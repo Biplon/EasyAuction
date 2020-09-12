@@ -13,21 +13,24 @@ import java.util.UUID;
 
 public class CoolDownManager
 {
-    private final List<CoolDownGroup> cdGroups = new ArrayList<>();
-
+    //CoolDownManager instance
     private static CoolDownManager instance;
-
+      //list off all cooldown groups
+    private final List<CoolDownGroup> cdGroups = new ArrayList<>();
+    //getter CoolDownManager instance
     public static CoolDownManager getInstance()
     {
         return instance;
     }
 
+    //constructor
     public CoolDownManager()
     {
         instance = this;
         loadCoolDownGroups();
     }
 
+    //load all cooldown groups from config
     public void loadCoolDownGroups()
     {
         cdGroups.clear();
@@ -47,22 +50,26 @@ public class CoolDownManager
         }
     }
 
+    //check if player has cooldown
     public boolean hasPlayerCoolDown(Player p)
     {
         return DatabaseManager.getInstance().playerCoolDown(p);
     }
 
+    //add cooldown to player
     public void addPlayerHasCoolDown(Player p)
     {
         UUID id = p.getUniqueId();
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () -> DatabaseManager.getInstance().setCoolDownPlayer(id,getPlayerCoolDown(p) ));
     }
 
+    //get player cooldown end
     public String getPlayerCoolDownTime(Player p)
     {
         return DatabaseManager.getInstance().getPlayerCoolDownTime(p);
     }
 
+    //get player cooldown time from cooldowngroup
     private int getPlayerCoolDown(Player p)
     {
         for (CoolDownGroup cdg : cdGroups)

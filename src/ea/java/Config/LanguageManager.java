@@ -16,6 +16,12 @@ public class LanguageManager
     public static String showCommandAlias;
     public static String auctionCommandAlias;
 
+    public static String ddetailsCommand;
+    public static String dnewCommand;
+    public static String dbidCommand;
+    public static String dsalesCommand;
+    public static String dshowCommand;
+
     //player commands outputText
 
     public static String showCommandOutput;
@@ -75,13 +81,9 @@ public class LanguageManager
     public static String auctionStartPriceText;
     public static String timeincreasse;
 
-    public static String ddetailsCommand;
-    public static String dnewCommand;
-    public static String dbidCommand;
-    public static String dsalesCommand;
-    public static String dshowCommand;
 
 
+    //get lang file and load all String
     public static void loadLang()
     {
         File configFile = new File("plugins" + File.separator + EasyAuction.getInstance().getName() + File.separator + EasyAuction.getInstance().getConfig().getString("general.lang") + ".yml");

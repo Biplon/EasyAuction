@@ -16,18 +16,24 @@ import java.util.Map;
 
 public class AuctionManager
 {
+    //AuctionManager instance
     static AuctionManager instance;
 
+    //current running auction
     private Auction currentAuction = null;
 
+    //task for notification timer
     private int timerTask;
+    //task for end auction
     private int timerEndAuctionTask;
-
+    //time between notification timer send message
     private final double remainingTimeLoop = 10;
+    //remaining time for auction
     private double timeLeft;
-
+    //auction enabled/disabled
     public boolean enabled = true;
 
+    //getter
     public Auction getCurrentAuction()
     {
         return currentAuction;
@@ -43,6 +49,8 @@ public class AuctionManager
         instance = this;
     }
 
+
+    //start a action. Create Auction object and start timer
     public void startAuction(Player p, ItemStack item, int startPrice, int time)
     {
         currentAuction = new Auction(p, item, startPrice);
@@ -54,6 +62,7 @@ public class AuctionManager
         startMessageTask(time, false);
     }
 
+    //start the notification timer task
     private void startMessageTask(int time, boolean override)
     {
         timeLeft = time;
@@ -69,6 +78,7 @@ public class AuctionManager
         }, (long) 10 * 20, (long) 10 * 20);
     }
 
+    //start auction end task
     private void startEndAuctionTask(int time, boolean override)
     {
         if (override)
@@ -78,6 +88,50 @@ public class AuctionManager
         timerEndAuctionTask = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(EasyAuction.getInstance(), this::endAuction, (time * 20));
     }
 
+    //stop running auction if auction start player is off ban him and give item back. If stop per admin give start player item back.
+    public void stopAuction(boolean playerOff, Player p)
+    {
+        Map<Integer, ItemStack> map;
+        if (playerOff)
+        {
+            map = p.getInventory().addItem(currentAuction.getAuctionItem());
+            if (map.size() == 1)
+            {
+                for (final ItemStack item : map.values())
+                {
+                    p.getWorld().dropItemNaturally(p.getLocation(), item);
+                }
+                map.clear();
+            }
+            CommandExecuteManager.getInstance().banPlayer(p.getName(), ConfigManager.banTime);
+        }
+        else
+        {
+            map = currentAuction.getAuctionStartPlayer().getInventory().addItem(currentAuction.getAuctionItem());
+            if (map.size() == 1)
+            {
+                for (final ItemStack item : map.values())
+                {
+                    currentAuction.getAuctionStartPlayer().getWorld().dropItemNaturally(currentAuction.getAuctionStartPlayer().getLocation(), item);
+                }
+                map.clear();
+            }
+        }
+
+        DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(), currentAuction.getAuctionItem().toString(), "---", 0);
+        Bukkit.getScheduler().cancelTask(timerTask);
+        Bukkit.getScheduler().cancelTask(timerEndAuctionTask);
+        for (Player pl : PlayerSeeAuctionManager.getPlayerSeeAuction())
+        {
+            if (pl != null && pl.isOnline())
+            {
+                pl.sendMessage(LanguageManager.auctionStop + " " + (playerOff ? LanguageManager.auctionStopPlayerOff : LanguageManager.auctionStopAdmin));
+            }
+        }
+        currentAuction = null;
+    }
+
+    //end auction
     private void endAuction()
     {
         if (currentAuction != null)
@@ -95,6 +149,7 @@ public class AuctionManager
         }
     }
 
+    //if auction ends with winner check if bid player online(if not ban). Set start player cooldown
     private void auctionEndWithWinner()
     {
         CoolDownManager.getInstance().addPlayerHasCoolDown(currentAuction.getAuctionStartPlayer());
@@ -120,6 +175,7 @@ public class AuctionManager
         }
     }
 
+    //if auction ends with no winner give start player item back and set cooldown
     private void auctionEndWithNoWinner()
     {
         CoolDownManager.getInstance().addPlayerHasCoolDown(currentAuction.getAuctionStartPlayer());
@@ -128,6 +184,7 @@ public class AuctionManager
         getAuctionStartItemBack();
     }
 
+    //give/remove all bid and star player item and money.
     private boolean giveWinnerItemAndPay()
     {
         if (currentAuction.getBidPlayer() != null && currentAuction.getBidPlayer().isOnline())
@@ -174,6 +231,7 @@ public class AuctionManager
         }
     }
 
+    //give start player item back
     private void getAuctionStartItemBack()
     {
         Map<Integer, ItemStack> map;
@@ -188,7 +246,7 @@ public class AuctionManager
         }
     }
 
-
+    //send message to all player who can see auction
     private void sendMessage(String msg)
     {
         for (Player pl : PlayerSeeAuctionManager.getPlayerSeeAuction())
@@ -200,6 +258,7 @@ public class AuctionManager
         }
     }
 
+    //send hovertext to all player who can see auction
     private void sendHoverMessage(String msg, ItemStack item, boolean update)
     {
         String itemtext = item.getAmount() + "x ";
@@ -257,49 +316,7 @@ public class AuctionManager
         }
     }
 
-    public void stopAuction(boolean playerOff, Player p)
-    {
-        Map<Integer, ItemStack> map;
-        if (playerOff)
-        {
-            map = p.getInventory().addItem(currentAuction.getAuctionItem());
-            if (map.size() == 1)
-            {
-                for (final ItemStack item : map.values())
-                {
-                    p.getWorld().dropItemNaturally(p.getLocation(), item);
-                }
-                map.clear();
-            }
-            CommandExecuteManager.getInstance().banPlayer(p.getName(), ConfigManager.banTime);
-        }
-        else
-        {
-            map = currentAuction.getAuctionStartPlayer().getInventory().addItem(currentAuction.getAuctionItem());
-            if (map.size() == 1)
-            {
-                for (final ItemStack item : map.values())
-                {
-                    currentAuction.getAuctionStartPlayer().getWorld().dropItemNaturally(currentAuction.getAuctionStartPlayer().getLocation(), item);
-                }
-                map.clear();
-            }
-        }
-
-        DatabaseManager.getInstance().createLog(currentAuction.getAuctionStartPlayer().getDisplayName(), currentAuction.getAuctionItem().toString(), "---", 0);
-        Bukkit.getScheduler().cancelTask(timerTask);
-        Bukkit.getScheduler().cancelTask(timerEndAuctionTask);
-        for (Player pl : PlayerSeeAuctionManager.getPlayerSeeAuction())
-        {
-            if (pl != null && pl.isOnline())
-            {
-                pl.sendMessage(LanguageManager.auctionStop + " " + (playerOff ? LanguageManager.auctionStopPlayerOff : LanguageManager.auctionStopAdmin));
-            }
-        }
-        currentAuction = null;
-    }
-
-
+    //set player bid and send notification to all player. If time lower 10 increase to 20
     public boolean playerBid(Player p, int bid)
     {
 
@@ -321,7 +338,7 @@ public class AuctionManager
         }
     }
 
-
+    //get time string from double
     private String getTimeString(double time)
     {
         double minutes = (time % 3600) / 60;

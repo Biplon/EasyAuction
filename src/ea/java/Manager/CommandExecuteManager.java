@@ -10,19 +10,22 @@ import org.bukkit.entity.Player;
 
 public class CommandExecuteManager
 {
+    //CommandExecuteManager instance
     private static CommandExecuteManager instance;
 
+    //getter CommandExecuteManager instance
     public static CommandExecuteManager getInstance()
     {
         return instance;
     }
 
+    //constructor
     public CommandExecuteManager()
     {
         instance = this;
     }
 
-
+    //show player all commands for /auction
     public void showCommandsCommandExecute(Player p)
     {
         p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.newCommandAlias + LanguageManager.dnewCommand);
@@ -33,6 +36,8 @@ public class CommandExecuteManager
         p.sendMessage("/" + LanguageManager.auctionCommandAlias + " " + LanguageManager.showCommandAlias + LanguageManager.dshowCommand);
     }
 
+    //show player all commands for /auctionadmin
+    //TODO put sting at the end into langfile
     public void showCommandsAdminCommandExecute(Player p)
     {
         p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.startCommandAlias + " | <" + LanguageManager.winCommandAlias + "> §7show player win auction");
@@ -43,6 +48,7 @@ public class CommandExecuteManager
         p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.reloadCommandAlias + " §7reload config and lang file");
     }
 
+    //ope inventory gui for player
     public void openNewAuctionGUI(Player p)
     {
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
@@ -79,6 +85,7 @@ public class CommandExecuteManager
         });
     }
 
+    //send to DBManager that player will change visibility of auctions
     public void showAuctionCommandExecute(Player p)
     {
         if (PlayerSeeAuctionManager.playerSeeAuctions(p))
@@ -91,7 +98,7 @@ public class CommandExecuteManager
         }
     }
 
-
+    //open inventory with the auction item for player. (To see skins by optifine + resspack)
     public void showItemDetails(Player player)
     {
         if (AuctionManager.getInstance().getCurrentAuction() != null)
@@ -105,6 +112,7 @@ public class CommandExecuteManager
 
     }
 
+    //check if player can bid and send it to the AuctionManager
     public void playerBid(Player player, int bid)
     {
         if (AuctionManager.getInstance().getCurrentAuction() != null)
@@ -145,6 +153,7 @@ public class CommandExecuteManager
         }
     }
 
+    //send the player his sales
     public void salesAuctionCommandExecute(Player player)
     {
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () -> player.sendMessage(LanguageManager.salesPlayerText.replace("%money%", DatabaseManager.getInstance().getPlayerSales(player))));
@@ -152,6 +161,7 @@ public class CommandExecuteManager
 
     //admin
 
+    //give the star/win stats from 1 player
     public void getPlayerStats(Player p, String name, boolean win)
     {
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
@@ -164,6 +174,7 @@ public class CommandExecuteManager
         });
     }
 
+    //enable/disable the auctions(reset after restart Server)
     public void endThisAuction(boolean active, boolean force)
     {
         AuctionManager.getInstance().enabled = active;
@@ -173,6 +184,7 @@ public class CommandExecuteManager
         }
     }
 
+    //stop the running auction
     public void stopAuction()
     {
         if (AuctionManager.getInstance().getCurrentAuction() != null)
@@ -181,6 +193,7 @@ public class CommandExecuteManager
         }
     }
 
+    //ban player for x min
     public void banPlayer(String playerName, int time)
     {
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
@@ -197,6 +210,7 @@ public class CommandExecuteManager
         });
     }
 
+    //pardon player
     public void pardonPlayer(String playerName)
     {
         Bukkit.getScheduler().runTask(EasyAuction.getInstance(), () ->
@@ -213,6 +227,7 @@ public class CommandExecuteManager
         });
     }
 
+    //reload all config values and the langfile
     public void reload()
     {
         ConfigManager.loadConfig();

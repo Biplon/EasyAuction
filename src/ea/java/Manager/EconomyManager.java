@@ -7,15 +7,17 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class EconomyManager
 {
+    //EconomyManager instance
     private static EconomyManager instance;
-
+    //Economy object
     private static Economy econ = null;
-
+    //getter EconomyManager instance
     public static EconomyManager getInstance()
     {
         return instance;
     }
 
+    //constructor and setup Economy object
     public EconomyManager()
     {
         instance = this;
@@ -26,6 +28,7 @@ public class EconomyManager
         }
     }
 
+    //setup economy
     private boolean setupEconomy()
     {
         if (EasyAuction.getInstance().getServer().getPluginManager().getPlugin("Vault") == null)
@@ -41,16 +44,19 @@ public class EconomyManager
         return econ != null;
     }
 
+    //check if player has enough money for bid
     public boolean canBid(Player p, double money)
     {
         return econ.has(p, money);
     }
 
+    //remove money from player
     public boolean removeMoney(Player p, double money)
     {
         return econ.withdrawPlayer(p, money).transactionSuccess();
     }
 
+    //add money to player
     public void addMoney(Player p, double money)
     {
         econ.depositPlayer(p, money).transactionSuccess();

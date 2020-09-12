@@ -9,21 +9,24 @@ import java.util.Objects;
 
 public class BlackList
 {
+    //BlackList instance
     private static BlackList instance;
-
+    //list for all blacklist items
+    private final List<String> blackListLore = new ArrayList<>();
+    //getter BlackList instance
     public static BlackList getInstance()
     {
         return instance;
     }
 
-    private final List<String> blackListLore = new ArrayList<>();
-
+    //constructor load blacklist values and create instance
     public BlackList()
     {
         instance = this;
         loadBlackList();
     }
 
+    //load all blacklist values
     public void loadBlackList()
     {
         blackListLore.clear();
@@ -43,6 +46,7 @@ public class BlackList
         }
     }
 
+    //check if item is on blacklist. Only check 1 lore string
     public boolean isNotOnBlackList(ItemStack currentItem)
     {
         if (Objects.requireNonNull(currentItem.getItemMeta()).hasLore())

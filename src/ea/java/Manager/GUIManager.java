@@ -15,21 +15,26 @@ import java.util.Arrays;
 
 public class GUIManager
 {
+    //GUIManager instance
     static GUIManager instance;
 
+    //Default inventory gui elements
+    private static final ItemStack defaultGuiItem = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ", "");
+    private static final ItemStack defaultGuiItem2 = createGuiItem(Material.YELLOW_STAINED_GLASS_PANE, " ", "");
+
+    //getter GUIManager instance
     public static GUIManager getInstance()
     {
         return instance;
     }
 
-    private static final ItemStack defaultGuiItem = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ", "");
-    private static final ItemStack defaultGuiItem2 = createGuiItem(Material.YELLOW_STAINED_GLASS_PANE, " ", "");
-
+    //constructor
     public GUIManager()
     {
         instance = this;
     }
 
+    //create gui for details
     public void showItemGUI(Player p,ItemStack item)
     {
         Inventory inv = Bukkit.createInventory(null, 45, "A:Item");
@@ -41,6 +46,7 @@ public class GUIManager
         p.openInventory(inv);
     }
 
+    //change item values in existing auction gui
     public void changeItemValue(EGUIChange change, int value, Inventory inv)
     {
         switch (change)
@@ -68,9 +74,19 @@ public class GUIManager
         }
     }
 
+    //open new auction gui
     public void openGUI(Player p)
     {
         Inventory inv = Bukkit.createInventory(null, 54, "A:" + LanguageManager.createAuctionGui);
+        setDefaultGuiItem(inv);
+        setDefaultGuiItem2(inv);
+        setSpecialItems(inv);
+        p.openInventory(inv);
+    }
+
+    //Set default item to gui
+    private void setDefaultGuiItem(Inventory inv)
+    {
         for (int i = 0; i < 9; i++)
         {
             inv.setItem(i, defaultGuiItem);
@@ -92,11 +108,9 @@ public class GUIManager
         inv.setItem(40, defaultGuiItem);
         inv.setItem(41, defaultGuiItem);
         inv.setItem(43, defaultGuiItem);
-        setDefaultGuiItem2(inv);
-        setSpecialItems(inv);
-        p.openInventory(inv);
     }
 
+    //Set default2 item to gui
     private void setDefaultGuiItem2(Inventory inv)
     {
         inv.setItem(10, defaultGuiItem2);
@@ -107,6 +121,7 @@ public class GUIManager
         inv.setItem(37, defaultGuiItem2);
     }
 
+    //set special items to gui
     private void setSpecialItems(Inventory inv)
     {
         inv.setItem(13, createGuiItem(Material.CLOCK, LanguageManager.timeplus, "+5"));
@@ -132,6 +147,7 @@ public class GUIManager
         inv.setItem(49, createGuiItem(Material.LIME_DYE, LanguageManager.startauction));
     }
 
+    //create item for gui
     private static ItemStack createGuiItem(final Material material, final String name, final String... lore)
     {
         final ItemStack item = new ItemStack(material, 1);

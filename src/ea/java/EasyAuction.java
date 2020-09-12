@@ -22,13 +22,15 @@ import java.util.Objects;
 
 public class EasyAuction extends JavaPlugin
 {
+    //EasyAuction instance
     private static EasyAuction instance;
-
+    //getter EasyAuction instance
     public static EasyAuction getInstance()
     {
         return instance;
     }
 
+    //on enable create all class instances and reg commands events and co
     @Override
     public void onEnable()
     {
@@ -46,6 +48,7 @@ public class EasyAuction extends JavaPlugin
         new EconomyManager();
     }
 
+    //register all commands and the alias
     private void regCommands()
     {
         Objects.requireNonNull(this.getCommand("auction")).setExecutor(new CommandAEPlayer());
@@ -63,6 +66,7 @@ public class EasyAuction extends JavaPlugin
         Objects.requireNonNull(this.getCommand("bid")).setAliases(alias);
     }
 
+    //register all event listener
     private void regEvents()
     {
         PluginManager pm = getServer().getPluginManager();
@@ -72,9 +76,11 @@ public class EasyAuction extends JavaPlugin
         pm.registerEvents(new OnInventoryClose(), this);
     }
 
+    //unregister all event listener and close db connection
     @Override
     public void onDisable()
     {
+        DatabaseManager.getInstance().closeConnection();
         HandlerList.unregisterAll(this);
     }
 }

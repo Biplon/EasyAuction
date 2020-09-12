@@ -14,11 +14,13 @@ public class CommandAEPlayerDetails implements CommandExecutor
         //check is player and have perms
         if (commandSender instanceof Player)
         {
+            //get Player and check perms
             Player player = (Player) commandSender;
             if (!player.hasPermission("ea.player"))
             {
                 return false;
             }
+            //check args == 0 and send it to CommandExecuteManager
             if (args.length == 0)
             {
                 CommandExecuteManager.getInstance().showItemDetails(player);

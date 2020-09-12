@@ -18,6 +18,7 @@ import java.util.Objects;
 
 public class OnInventoryClick implements Listener
 {
+    //check if inventory was from auction and make stuff
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e)
     {
@@ -81,7 +82,6 @@ public class OnInventoryClick implements Listener
                 p.closeInventory();
             }
         }
-
     }
 
     @EventHandler

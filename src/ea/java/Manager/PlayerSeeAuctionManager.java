@@ -11,13 +11,16 @@ import java.util.List;
 
 public class PlayerSeeAuctionManager
 {
+    //list off player that see auction messages
     private static final List<Player> playerSeeAuction = new ArrayList<>();
 
+    //get of playerSeeAuction list
     public static List<Player> getPlayerSeeAuction()
     {
         return playerSeeAuction;
     }
 
+    //add player to playerSeeAuction list
     public static void addPlayerSeeAuction(Player p)
     {
         playerSeeAuction.add(p);
@@ -25,6 +28,7 @@ public class PlayerSeeAuctionManager
         p.sendMessage(LanguageManager.showCommandOutput + "true");
     }
 
+    //remove player to playerSeeAuction list
     public static void removePlayerSeeAuction(Player p)
     {
         playerSeeAuction.remove(p);
@@ -33,6 +37,7 @@ public class PlayerSeeAuctionManager
         ItemStack i = new ItemStack(Material.DIAMOND_SWORD,3);
     }
 
+    //check player can see auction
     public static boolean playerSeeAuctions(Player p)
     {
         for (Player pl : playerSeeAuction)
@@ -48,6 +53,7 @@ public class PlayerSeeAuctionManager
         return false;
     }
 
+    //check player see auction and add to playerSeeAuction list(for playerJoin)
     public static void checkPlayerSeeAuction(Player p)
     {
         if (DatabaseManager.getInstance().playerSeeAuction(p.getUniqueId()))
