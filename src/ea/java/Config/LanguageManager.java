@@ -21,6 +21,13 @@ public class LanguageManager
     public static String dbidCommand;
     public static String dsalesCommand;
     public static String dshowCommand;
+    public static String dstartwinCommand;
+    public static String denabledisableCommand;
+    public static String dstopCommand;
+    public static String dbanCommand;
+    public static String dpardonCommand;
+    public static String dreloadCommand;
+
 
     //player commands outputText
 
@@ -82,7 +89,6 @@ public class LanguageManager
     public static String timeincreasse;
 
 
-
     //get lang file and load all String
     public static void loadLang()
     {
@@ -122,6 +128,16 @@ public class LanguageManager
         dbidCommand = cfg.getString("dbidCommand") != null ? cfg.getString("dbidCommand") : "bid on running auction";
         dsalesCommand = cfg.getString("dsalesCommand") != null ? cfg.getString("dsalesCommand") : "show your sales value";
         dshowCommand = cfg.getString("dshowCommand") != null ? cfg.getString("dshowCommand") : "enable/disable auctions notifications";
+
+        dstartwinCommand = cfg.getString("dstartwinCommand") != null ? cfg.getString("dstartwinCommand") : "show player win/start auction";
+        denabledisableCommand = cfg.getString("denabledisableCommand") != null ? cfg.getString("denabledisableCommand") : "enable/disable auction system (force stop running auction)";
+        dstopCommand = cfg.getString("dstopCommand") != null ? cfg.getString("dstopCommand") : "stop running auction";
+        dbanCommand = cfg.getString("dbanCommand") != null ? cfg.getString("dbanCommand") : "ban player for x min";
+        dpardonCommand = cfg.getString("dpardonCommand") != null ? cfg.getString("dpardonCommand") : "remove ban from player";
+        dreloadCommand = cfg.getString("dreloadCommand") != null ? cfg.getString("dreloadCommand") : "reload config and lang file";
+
+
+
         //GUI text
         createAuctionGui = cfg.getString("createAuctionGui") != null ? cfg.getString("createAuctionGui") : "New Auction";
         timeplus = cfg.getString("timeplus") != null ? cfg.getString("timeplus") : "Increase auction time";

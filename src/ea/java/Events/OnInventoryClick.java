@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -59,19 +60,19 @@ public class OnInventoryClick implements Listener
 
         if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.timeplus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Time, 5, e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Time, 5 * (e.getClick() == ClickType.SHIFT_LEFT ? 2 : 1), e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.timeminus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Time, -5, e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Time, -5 * (e.getClick() == ClickType.SHIFT_LEFT ? 2 : 1), e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.moneyplus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Money, Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)), e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Money, Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)) * (e.getClick() == ClickType.SHIFT_LEFT ? 10 : 1), e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.moneyminus))
         {
-            GUIManager.getInstance().changeItemValue(EGUIChange.Money, Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)), e.getClickedInventory());
+            GUIManager.getInstance().changeItemValue(EGUIChange.Money, Integer.parseInt(e.getCurrentItem().getItemMeta().getLore().get(0)) * (e.getClick() == ClickType.SHIFT_LEFT ? 10 : 1), e.getClickedInventory());
         }
         else if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(LanguageManager.startauction))
         {

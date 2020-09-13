@@ -246,6 +246,28 @@ public class AuctionManager
         }
     }
 
+    //set player bid and send notification to all player. If time lower 10 increase to 20
+    public boolean playerBid(Player p, int bid)
+    {
+
+        if (currentAuction != null && currentAuction.getPriceCurrent() < bid)
+        {
+            currentAuction.setBidPlayer(p, bid);
+            sendMessage(LanguageManager.playerBid.replace("%player%", currentAuction.getBidPlayer().getName() + "").replace("%price%", currentAuction.getPriceCurrent() + ""));
+            if (timeLeft == 10)
+            {
+                startMessageTask(20, true);
+                startEndAuctionTask(20, true);
+                sendMessage(LanguageManager.timeincreasse.replace("%time%", timeLeft + ""));
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //send message to all player who can see auction
     private void sendMessage(String msg)
     {
@@ -268,7 +290,7 @@ public class AuctionManager
         }
         else
         {
-            itemtext += item.getType();
+            itemtext += item.getType().name();
         }
         if (update)
         {
@@ -289,6 +311,7 @@ public class AuctionManager
         net.minecraft.server.v1_15_R1.ItemStack nms = CraftItemStack.asNMSCopy(item);
         NBTTagCompound tag = new NBTTagCompound();
         nms.save(tag);
+
         TextComponent text = new TextComponent();
         for (int i = 0; i < parts.length; i++)
         {
@@ -313,28 +336,6 @@ public class AuctionManager
             {
                 pl.spigot().sendMessage(text);
             }
-        }
-    }
-
-    //set player bid and send notification to all player. If time lower 10 increase to 20
-    public boolean playerBid(Player p, int bid)
-    {
-
-        if (currentAuction != null && currentAuction.getPriceCurrent() < bid)
-        {
-            currentAuction.setBidPlayer(p, bid);
-            sendMessage(LanguageManager.playerBid.replace("%player%", currentAuction.getBidPlayer().getName() + "").replace("%price%", currentAuction.getPriceCurrent() + ""));
-            if (timeLeft == 10)
-            {
-                startMessageTask(20, true);
-                startEndAuctionTask(20, true);
-                sendMessage(LanguageManager.timeincreasse.replace("%time%", timeLeft + ""));
-            }
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 

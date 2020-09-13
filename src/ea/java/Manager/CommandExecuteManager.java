@@ -40,12 +40,12 @@ public class CommandExecuteManager
     //TODO put sting at the end into langfile
     public void showCommandsAdminCommandExecute(Player p)
     {
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.startCommandAlias + " | <" + LanguageManager.winCommandAlias + "> §7show player win auction");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.enableCommandAlias + " | <" + LanguageManager.disableCommandAlias + "> [force] §7show player start auction (force stop running auction)");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.stopCommandAlias + " §7stop running auction");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.banCommandAlias + " <playername> " + "<time>" + " §7ban player for x min");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.pardonCommandAlias + " <playername>" + " §7remove player ban");
-        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.reloadCommandAlias + " §7reload config and lang file");
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " <" + LanguageManager.startCommandAlias + "> | <" + LanguageManager.winCommandAlias + ">"  + LanguageManager.dstartwinCommand );
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " <" + LanguageManager.enableCommandAlias + "> | <" + LanguageManager.disableCommandAlias + "> [force]"  + LanguageManager.denabledisableCommand);
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.stopCommandAlias   + LanguageManager.dstopCommand);
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.banCommandAlias + " <playername> " + "<time> "  + LanguageManager.dbanCommand);
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.pardonCommandAlias + " <playername>"  + LanguageManager.dpardonCommand);
+        p.sendMessage("/" + LanguageManager.auctionAdminCommandAlias + " " + LanguageManager.reloadCommandAlias + LanguageManager.dreloadCommand);
     }
 
     //ope inventory gui for player
